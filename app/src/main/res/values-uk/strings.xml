@@ -66,5 +66,7 @@
     <string name="total_kcal">ККАЛ</string>
     <string name="total_ratio">БЖВ</string>
     <string name="per_day_statistics">СЕРЕД. ЗА ДЕНЬ</string>
+    <string name="export_to_csv">Експорт. до CSV</string>
+    <string name="exporting">Exporting...</string>
 
 </resources>

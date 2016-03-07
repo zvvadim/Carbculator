@@ -12,6 +12,8 @@ public interface Storage {
     Cursor queryDays();
     
     Cursor queryEatings(Date date);
+
+    Cursor queryEatings();
     
     Cursor queryFoods();
 

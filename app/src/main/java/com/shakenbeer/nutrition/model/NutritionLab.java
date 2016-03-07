@@ -66,6 +66,20 @@ public class NutritionLab {
         return list;
     }
 
+    public List<Eating> getEatings() {
+        Cursor cursor = storage.queryEatings();
+        DataCursor<Eating> eatingCursor = new DataCursor<Eating>(cursor, new DbEatingGetter());
+        List<Eating> list = new ArrayList<Eating>();
+
+        if (eatingCursor.moveToFirst()) {
+            do {
+                list.add(eatingCursor.get());
+            } while (eatingCursor.moveToNext());
+        }
+        eatingCursor.close();
+        return list;
+    }
+
     public List<Component> getComponents(Eating eating) {
         Cursor cursor = storage.queryComponents(eating);
         DataCursor<Component> componentCursor = new DataCursor<Component>(cursor, new DbComponentGetter());

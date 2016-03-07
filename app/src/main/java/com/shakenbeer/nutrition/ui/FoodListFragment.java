@@ -77,14 +77,18 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Loader<Object> loader = getLoaderManager().getLoader(0);
-                if (loader != null && !loader.isReset())
-                    getLoaderManager().restartLoader(0, null, FoodListFragment.this);
-                else
-                    getLoaderManager().initLoader(0, null, FoodListFragment.this);
+                initLoader();
                 return true;
             }
         });
+    }
+
+    private void initLoader() {
+        Loader<Object> loader = getLoaderManager().getLoader(0);
+        if (loader != null && !loader.isReset())
+            getLoaderManager().restartLoader(0, null, FoodListFragment.this);
+        else
+            getLoaderManager().initLoader(0, null, FoodListFragment.this);
     }
 
     @Override

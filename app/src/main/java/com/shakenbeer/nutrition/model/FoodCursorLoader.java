@@ -16,6 +16,7 @@ public class FoodCursorLoader extends SimpleCursorLoader {
     @Override
     public Cursor loadInBackground() {
         return NutritionLab.getInstance(getContext()).getFoodCursor();
+
     }
 
 }

@@ -65,5 +65,7 @@
     <string name="total_kcal">KCAL</string>
     <string name="total_ratio">PFC RATIO</string>
     <string name="per_day_statistics">AVG PER DAY</string>
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="exporting">Exporting…</string>
 
 </resources>

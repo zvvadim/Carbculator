@@ -1,6 +1,10 @@
 package com.shakenbeer.nutrition.ui;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,11 +12,13 @@ import java.util.List;
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +30,7 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
@@ -33,9 +40,10 @@ import com.shakenbeer.nutrition.model.DayCursorLoader;
 import com.shakenbeer.nutrition.model.Eating;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
+import au.com.bytecode.opencsv.CSVWriter;
+
 /**
  * @author Sviatoslav Melnychenko
- *
  */
 public class DayListFragment extends ListFragment implements LoaderCallbacks<Cursor>, LanguageDialogFragment.Callbacks {
 
@@ -45,6 +53,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
     private NutritionLab nutritionLab;
     private DataCursor<Day> dayCursor;
+    private ProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +61,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
-        
+
         CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
 
         nutritionLab = NutritionLab.getInstance(getActivity().getApplicationContext());
@@ -72,13 +81,13 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-            case OPEN_DAY:
-            case FOOD_LIST:
-            case ADD_EATING:
-                getLoaderManager().restartLoader(0, null, this);
-                break;
-            default:
-                break;
+                case OPEN_DAY:
+                case FOOD_LIST:
+                case ADD_EATING:
+                    getLoaderManager().restartLoader(0, null, this);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -97,23 +106,43 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.add_eating_menu_item:
-            addEating();
-            return true;
-        case R.id.food_list_menu_item:
-            openFoodList();
-            return true;
-        case R.id.language_list_menu_item:
-            LanguageDialogFragment fragment = LanguageDialogFragment.newInstance(this);
-            fragment.show(getFragmentManager(), null);
-            return true;
-        case R.id.statistics_menu_item:
-            Intent intent = new Intent(getActivity(), StatisticsActivity.class);
-            startActivity(intent);
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
+            case R.id.add_eating_menu_item:
+                addEating();
+                return true;
+            case R.id.food_list_menu_item:
+                openFoodList();
+                return true;
+            case R.id.language_list_menu_item:
+                LanguageDialogFragment fragment = LanguageDialogFragment.newInstance(this);
+                fragment.show(getFragmentManager(), null);
+                return true;
+            case R.id.statistics_menu_item:
+                Intent intent = new Intent(getActivity(), StatisticsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_csv:
+                exportToCsv();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void exportToCsv() {
+        if (isExternalStorageWritable()) {
+            new AsyncExportToCsv().execute();
+
+        }
+
+    }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -145,6 +174,77 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
             return null;
         }
 
+    }
+
+    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
+
+        public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
+        private volatile String dir;
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setTitle(R.string.exporting);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+            dir = Environment.DIRECTORY_DOWNLOADS;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                dir = Environment.DIRECTORY_DOCUMENTS;
+            }
+            File directory = Environment.getExternalStoragePublicDirectory(dir);
+            if (!directory.exists())
+                directory.mkdirs();
+            File file = new File(directory, CARBCULATOR_REPORT_CSV);
+
+            CSVWriter csvWrite = null;
+            try {
+                file.createNewFile();
+                csvWrite = new CSVWriter(new FileWriter(file));
+                List<Eating> eatings = nutritionLab.getEatings();
+                csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
+                String[] en = getResources().getStringArray(R.array.eating_names);
+                for (Eating eating : eatings) {
+
+                    csvWrite.writeNext(
+                            sdf.format(eating.getDate()),
+                            String.valueOf(en[eating.getNumber()]),
+                            String.format("%.1f", eating.getKcal()),
+                            String.format("%.1f", eating.getProtein()),
+                            String.format("%.1f", eating.getFat()),
+                            String.format("%.1f", eating.getCarbs()));
+                }
+
+            } catch (IOException e) {
+                dir = e.getMessage();
+                return false;
+            } finally {
+                try {
+                    if (csvWrite != null) {
+                        csvWrite.close();
+                    }
+                } catch (IOException ignored) {
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (success) {
+                Toast.makeText(getActivity(), "You can find report in " + dir, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Failed to export data: " + dir, Toast.LENGTH_LONG).show();
+            }
+
+        }
     }
 
     private void initializeWidgets(View view) {
@@ -184,6 +284,8 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                 new AsyncDeleteDey().execute(toDelete.toArray(new Day[toDelete.size()]));
             }
         });
+
+        dialog = new ProgressDialog(getActivity());
     }
 
     private void openDay(Day day) {
@@ -208,24 +310,24 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         String newLocale = "en";
 
         switch (which) {
-        case 0:
-            newLocale = "en";
-            break;
-        case 1:
-            newLocale = "ru_RU";
-            break;
-        case 2:
-            newLocale = "uk_UK";
-            break;
-        default:
-            break;
+            case 0:
+                newLocale = "en";
+                break;
+            case 1:
+                newLocale = "ru_RU";
+                break;
+            case 2:
+                newLocale = "uk_UK";
+                break;
+            default:
+                break;
         }
 
         PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).edit()
                 .putString(CarbculatorApplication.APP_LANG, newLocale).commit();
-        
+
         CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
-        
+
         getActivity().recreate();
     }
 }
