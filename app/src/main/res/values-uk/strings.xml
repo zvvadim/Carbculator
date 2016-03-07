@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Carbculator</string>
+    <string name="protein_colon">"Білок: "</string>
+    <string name="carbs_colon">"Вуглеводи: "</string>
+    <string name="fat_colon">"Жири: "</string>
+    <string name="kcal_colon">"Ккал: "</string>
+    <string name="unit">Одиниці віміру (100 г, 1 шт. тощо)</string>
+    <string name="protein_per_unit">Білку на одиницю виміру</string>
+    <string name="carbs_per_unit">Вуглеводів на одиницю виміру</string>
+    <string name="fat_per_unit">Жирів на одиницю виміру</string>
+    <string name="kcal_per_unit">Ккал на одиницю виміру</string>
+    <string name="ingredient_grams">Об\'єм продукту</string>
+    <string name="add_eating">Додати прийом їжі</string>
+    <string name="add_food">Додати продукт</string>
+    <string name="add_food_to_list">Додати продукт до списку</string>
+    <string name="add">Додати</string>
+    <string name="delete_eating">Видалити прийом їжі</string>
+    <string name="delete_day">Видалити день</string>
+    <string name="delete_food">Видалити продукт</string>
+    <string name="new_eating">Новий прийом їжі</string>
+    <string name="save">Зберегти</string>
+    <string name="food_list">Список продуктів</string>
+    <string name="food_name">Назва продукту</string>
+    <string name="new_food">Новий продукт</string>
+    <string name="select_food">Виберіть продукт&#8230;</string>
+    <string name="grams">грамів</string>
+    <string name="search_food">Пошук продукту&#8230;</string>
+
+    <string-array name="eating_names">
+        <item>Сніданок</item>
+        <item>Другий сніданок</item>
+        <item>Обід</item>
+        <item>Вечеря</item>
+        <item>Пізня вечеря</item>
+        <item>Перекус</item>
+    </string-array>
+
+    <string name="pfc_ratio">"БЖВ: "</string>
+    <string name="language">Мова</string>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Русский</item>
+        <item>Українська</item>
+    </string-array>
+    <string-array name="init_food">
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Рис білий, довгозернистий', 7.13, 0.66, 80, 365, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Куряча грудка', 23.6, 1.9, 0.4, 165, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Хліб білий', 7.6, 3.3, 50.6, 165, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Банани', 1.5, 0, 22.4, 91, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Огірки свіжі', 0.8, 0, 3, 15, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Помідори свіжі', 0.8, 0, 3, 15, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name, unit) VALUES ('Яйця великі', 8.16, 6.97, 0.54, 105.4, 'шт.', 1)"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Вівсянка', 13.1, 6.2, 65.7, 355, 'грамів')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Молоко 3%', 3.29, 3.34, 4.66, 61.44, 'грамів')"</item>
+    </string-array>
+
+    <string name="statistics">Статистика</string>
+    <string name="total_statistics">ЗАГАЛЬНА СТАТИСТИКА</string>
+    <string name="total_days">ДНІ</string>
+    <string name="total_potein">БІЛКИ</string>
+    <string name="total_fat">ЖИРИ</string>
+    <string name="total_carbs">ВУГЛЕВОДИ</string>
+    <string name="total_kcal">ККАЛ</string>
+    <string name="total_ratio">БЖВ</string>
+    <string name="per_day_statistics">СЕРЕД. ЗА ДЕНЬ</string>
+
+</resources>
