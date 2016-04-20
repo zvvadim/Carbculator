@@ -67,5 +67,11 @@
     <string name="per_day_statistics">AVG PER DAY</string>
     <string name="export_to_csv">Export to CSV</string>
     <string name="exporting">Exporting…</string>
+    
+    <string name="list_snackbar_action_show">Show</string>
+    <string name="list_snackbar_action_open">Open</string>
+    <string name="list_snackbar_message_export_success">You can find report in</string>
+    <string name="list_snackbar_message_export_failure">Failed to export:</string>
+
 
 </resources>
