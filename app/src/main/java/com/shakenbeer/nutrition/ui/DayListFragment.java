@@ -56,8 +56,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     private DataCursor<Day> dayCursor;
     private ProgressDialog dialog;
 
-    private ListView mListView;
-
     private Uri mUriExport;
 
     @Override
@@ -76,7 +74,8 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_day_list, container, false);
 
         initializeWidgets(view);
@@ -170,126 +169,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         setListAdapter(null);
     }
 
-    private class AsyncDeleteDey extends AsyncTask<Day, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Day... params) {
-            for (int i = 0; i < params.length; i++) {
-                nutritionLab.deleteDay(params[i]);
-            }
-            getLoaderManager().restartLoader(0, null, DayListFragment.this);
-            return null;
-        }
-
-    }
-
-    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
-        public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
-        private volatile String dir;
-
-        @Override
-        protected void onPreExecute() {
-            dialog.setTitle(R.string.exporting);
-            dialog.show();
-        }
-
-        private boolean externalStorageAvailable() {
-            return
-                    Environment.MEDIA_MOUNTED
-                            .equals(Environment.getExternalStorageState());
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            File path = null;
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-            dir = Environment.DIRECTORY_DOWNLOADS;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                dir = Environment.DIRECTORY_DOCUMENTS;
-            }
-
-            if (externalStorageAvailable()) {
-                path = Environment.getExternalStoragePublicDirectory(dir);
-            } else {
-                path = Environment.getDataDirectory();
-            }
-
-            File file = new File(path.getAbsolutePath() + "/" + CARBCULATOR_REPORT_CSV);
-
-            mUriExport = Uri.fromFile(file);
-            CSVWriter csvWrite = null;
-            try {
-                if (!path.exists()){
-                    path.mkdirs();
-                }
-
-                file.createNewFile();
-                csvWrite = new CSVWriter(new FileWriter(file));
-                List<Eating> eatings = nutritionLab.getEatings();
-                csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
-                String[] en = getResources().getStringArray(R.array.eating_names);
-                for (Eating eating : eatings) {
-
-                    csvWrite.writeNext(
-                            sdf.format(eating.getDate()),
-                            String.valueOf(en[eating.getNumber()]),
-                            String.format("%.1f", eating.getKcal()),
-                            String.format("%.1f", eating.getProtein()),
-                            String.format("%.1f", eating.getFat()),
-                            String.format("%.1f", eating.getCarbs()));
-                }
-
-            } catch (IOException e) {
-                dir = e.getMessage();
-                return false;
-            } finally {
-                try {
-                    if (csvWrite != null) {
-                        csvWrite.close();
-                    }
-                } catch (IOException ignored) {
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            if (success) {
-
-                Snackbar snackbar = Snackbar
-                        .make(mListView, getString(R.string.list_snackbar_message_export_success)
-                                + " "+ dir,
-                                Snackbar.LENGTH_LONG);
-                snackbar.setAction("Open", new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        if (mUriExport == null){return;}
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(mUriExport, "text/plain");
-                        startActivity(intent);
-                    }
-                });
-                snackbar.show();
-            } else {
-                Snackbar snackbar = Snackbar
-                        .make(mListView, getString(R.string.list_snackbar_message_export_failure)
-                                + "" +
-                                " "+ dir, Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-
-        }
-    }
-
     private void initializeWidgets(View view) {
 
         LinearLayout empty = (LinearLayout) view.findViewById(android.R.id.empty);
@@ -308,10 +187,10 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
             });
         }
 
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 
-        mListView.setMultiChoiceModeListener(new NutritionMultiChoiceModeListener() {
+        listView.setMultiChoiceModeListener(new NutritionMultiChoiceModeListener() {
 
             @Override
             public void deleteSelectedItems() {
@@ -373,5 +252,161 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
 
         getActivity().recreate();
+    }
+
+    private class AsyncDeleteDey extends AsyncTask<Day, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Day... params) {
+            for (int i = 0; i < params.length; i++) {
+                nutritionLab.deleteDay(params[i]);
+            }
+            getLoaderManager().restartLoader(0, null, DayListFragment.this);
+            return null;
+        }
+
+    }
+
+    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
+        public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
+        private volatile String dir;
+
+        protected File getCarbculatorStorageDir() {
+            ListView listView = getListView();
+
+            File path = null;
+
+            dir = Environment.DIRECTORY_DOWNLOADS;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                dir = Environment.DIRECTORY_DOCUMENTS;
+            }
+
+            if (!externalStorageAvailable()) {
+                Snackbar snackbar = Snackbar
+                        .make(listView, getString(R.string.list_snackbar_message_no_storage),
+                                Snackbar.LENGTH_LONG);
+                snackbar.show();
+                return null;
+            }
+
+            path = Environment.getExternalStoragePublicDirectory(dir);
+            if (!path.exists()) {
+                dir = "Carbculator";
+                path = Environment.getExternalStorageDirectory();
+                if (!path.exists()) {
+                    Snackbar snackbar = Snackbar
+                            .make(listView, getString(R.string.list_snackbar_message_no_storage),
+                                    Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    return null;
+                }
+                path = new File(path.getAbsolutePath(), "Carbculator");
+                if (!path.exists()) {
+                    if (!path.mkdirs()) {
+                        Snackbar snackbar = Snackbar
+                                .make(listView, getString(
+                                        R.string.list_snackbar_message_error_creating_directory),
+                                        Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                        return null;
+                    }
+                }
+            }
+
+            return path;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setTitle(R.string.exporting);
+            dialog.show();
+        }
+
+        private boolean externalStorageAvailable() {
+            return
+                    Environment.MEDIA_MOUNTED
+                            .equals(Environment.getExternalStorageState());
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            File path = getCarbculatorStorageDir();
+            if (path == null) {
+                return false;
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+            CSVWriter csvWrite = null;
+            try {
+                File file = new File(path.getAbsolutePath() + "/" +
+                        CARBCULATOR_REPORT_CSV);
+
+                mUriExport = Uri.fromFile(file);
+
+                file.createNewFile();
+                csvWrite = new CSVWriter(new FileWriter(file));
+                List<Eating> eatings = nutritionLab.getEatings();
+                csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
+                String[] en = getResources().getStringArray(R.array.eating_names);
+                for (Eating eating : eatings) {
+
+                    csvWrite.writeNext(
+                            sdf.format(eating.getDate()),
+                            String.valueOf(en[eating.getNumber()]),
+                            String.format("%.1f", eating.getKcal()),
+                            String.format("%.1f", eating.getProtein()),
+                            String.format("%.1f", eating.getFat()),
+                            String.format("%.1f", eating.getCarbs()));
+                }
+
+            } catch (IOException e) {
+                dir = e.getMessage();
+                return false;
+            } finally {
+                try {
+                    if (csvWrite != null) {
+                        csvWrite.close();
+                    }
+                } catch (IOException ignored) {
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            ListView listView = getListView();
+            if (success) {
+                Snackbar snackbar = Snackbar
+                        .make(listView, getString(R.string.list_snackbar_message_export_success)
+                                        + " " + dir,
+                                Snackbar.LENGTH_LONG);
+                snackbar.setAction("Open", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mUriExport == null) {
+                            return;
+                        }
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(mUriExport, "text/plain");
+                        startActivity(intent);
+                    }
+                });
+                snackbar.show();
+            } else {
+                Snackbar snackbar = Snackbar
+                        .make(listView, getString(R.string.list_snackbar_message_export_failure)
+                                + "" +
+                                " " + dir, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+
+        }
     }
 }
