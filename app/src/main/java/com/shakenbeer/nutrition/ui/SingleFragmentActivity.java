@@ -1,11 +1,10 @@
 package com.shakenbeer.nutrition.ui;
 
-import android.support.v7.app.ActionBar;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
 
 import com.shakenbeer.nutrition.R;
 
@@ -13,7 +12,7 @@ import com.shakenbeer.nutrition.R;
  * @author Sviatoslav Melnychenko
  *
  */
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends Activity {
     
     
     protected abstract Fragment createFragment();
@@ -21,7 +20,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(getLayoutResId());
         FragmentManager fm = getFragmentManager();
