@@ -69,9 +69,4 @@
     <string name="export_to_csv">Експорт. до CSV</string>
     <string name="exporting">Exporting...</string>
 
-    <string name="list_snackbar_action_show">Показати</string>
-    <string name="list_snackbar_action_open">Відкрити</string>
-    <string name="list_snackbar_message_export_success">Файл знаходиться в</string>
-    <string name="list_snackbar_message_export_failure">Помилка експорту до</string>
-
 </resources>

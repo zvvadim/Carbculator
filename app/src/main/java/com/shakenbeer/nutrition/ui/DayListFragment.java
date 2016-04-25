@@ -1,5 +1,14 @@
 package com.shakenbeer.nutrition.ui;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -7,12 +16,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +30,7 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
@@ -31,15 +39,6 @@ import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.DayCursorLoader;
 import com.shakenbeer.nutrition.model.Eating;
 import com.shakenbeer.nutrition.model.NutritionLab;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
@@ -55,8 +54,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     private NutritionLab nutritionLab;
     private DataCursor<Day> dayCursor;
     private ProgressDialog dialog;
-
-    private Uri mUriExport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,12 +71,9 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_day_list, container, false);
-
         initializeWidgets(view);
-
         return view;
     }
 
@@ -169,6 +163,90 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         setListAdapter(null);
     }
 
+    private class AsyncDeleteDey extends AsyncTask<Day, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Day... params) {
+            for (int i = 0; i < params.length; i++) {
+                nutritionLab.deleteDay(params[i]);
+            }
+            getLoaderManager().restartLoader(0, null, DayListFragment.this);
+            return null;
+        }
+
+    }
+
+    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
+
+        public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
+        private volatile String dir;
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setTitle(R.string.exporting);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+            dir = Environment.DIRECTORY_DOWNLOADS;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                dir = Environment.DIRECTORY_DOCUMENTS;
+            }
+            File directory = Environment.getExternalStoragePublicDirectory(dir);
+            if (!directory.exists())
+                directory.mkdirs();
+            File file = new File(directory, CARBCULATOR_REPORT_CSV);
+
+            CSVWriter csvWrite = null;
+            try {
+                file.createNewFile();
+                csvWrite = new CSVWriter(new FileWriter(file));
+                List<Eating> eatings = nutritionLab.getEatings();
+                csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
+                String[] en = getResources().getStringArray(R.array.eating_names);
+                for (Eating eating : eatings) {
+
+                    csvWrite.writeNext(
+                            sdf.format(eating.getDate()),
+                            String.valueOf(en[eating.getNumber()]),
+                            String.format("%.1f", eating.getKcal()),
+                            String.format("%.1f", eating.getProtein()),
+                            String.format("%.1f", eating.getFat()),
+                            String.format("%.1f", eating.getCarbs()));
+                }
+
+            } catch (IOException e) {
+                dir = e.getMessage();
+                return false;
+            } finally {
+                try {
+                    if (csvWrite != null) {
+                        csvWrite.close();
+                    }
+                } catch (IOException ignored) {
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (success) {
+                Toast.makeText(getActivity(), "You can find report in " + dir, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Failed to export data: " + dir, Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
     private void initializeWidgets(View view) {
 
         LinearLayout empty = (LinearLayout) view.findViewById(android.R.id.empty);
@@ -208,7 +286,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         });
 
         dialog = new ProgressDialog(getActivity());
-
     }
 
     private void openDay(Day day) {
@@ -252,161 +329,5 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
 
         getActivity().recreate();
-    }
-
-    private class AsyncDeleteDey extends AsyncTask<Day, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Day... params) {
-            for (int i = 0; i < params.length; i++) {
-                nutritionLab.deleteDay(params[i]);
-            }
-            getLoaderManager().restartLoader(0, null, DayListFragment.this);
-            return null;
-        }
-
-    }
-
-    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
-        public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
-        private volatile String dir;
-
-        protected File getCarbculatorStorageDir() {
-            ListView listView = getListView();
-
-            File path = null;
-
-            dir = Environment.DIRECTORY_DOWNLOADS;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                dir = Environment.DIRECTORY_DOCUMENTS;
-            }
-
-            if (!externalStorageAvailable()) {
-                Snackbar snackbar = Snackbar
-                        .make(listView, getString(R.string.list_snackbar_message_no_storage),
-                                Snackbar.LENGTH_LONG);
-                snackbar.show();
-                return null;
-            }
-
-            path = Environment.getExternalStoragePublicDirectory(dir);
-            if (!path.exists()) {
-                dir = "Carbculator";
-                path = Environment.getExternalStorageDirectory();
-                if (!path.exists()) {
-                    Snackbar snackbar = Snackbar
-                            .make(listView, getString(R.string.list_snackbar_message_no_storage),
-                                    Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                    return null;
-                }
-                path = new File(path.getAbsolutePath(), "Carbculator");
-                if (!path.exists()) {
-                    if (!path.mkdirs()) {
-                        Snackbar snackbar = Snackbar
-                                .make(listView, getString(
-                                        R.string.list_snackbar_message_error_creating_directory),
-                                        Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                        return null;
-                    }
-                }
-            }
-
-            return path;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog.setTitle(R.string.exporting);
-            dialog.show();
-        }
-
-        private boolean externalStorageAvailable() {
-            return
-                    Environment.MEDIA_MOUNTED
-                            .equals(Environment.getExternalStorageState());
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            File path = getCarbculatorStorageDir();
-            if (path == null) {
-                return false;
-            }
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-            CSVWriter csvWrite = null;
-            try {
-                File file = new File(path.getAbsolutePath() + "/" +
-                        CARBCULATOR_REPORT_CSV);
-
-                mUriExport = Uri.fromFile(file);
-
-                file.createNewFile();
-                csvWrite = new CSVWriter(new FileWriter(file));
-                List<Eating> eatings = nutritionLab.getEatings();
-                csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
-                String[] en = getResources().getStringArray(R.array.eating_names);
-                for (Eating eating : eatings) {
-
-                    csvWrite.writeNext(
-                            sdf.format(eating.getDate()),
-                            String.valueOf(en[eating.getNumber()]),
-                            String.format("%.1f", eating.getKcal()),
-                            String.format("%.1f", eating.getProtein()),
-                            String.format("%.1f", eating.getFat()),
-                            String.format("%.1f", eating.getCarbs()));
-                }
-
-            } catch (IOException e) {
-                dir = e.getMessage();
-                return false;
-            } finally {
-                try {
-                    if (csvWrite != null) {
-                        csvWrite.close();
-                    }
-                } catch (IOException ignored) {
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            ListView listView = getListView();
-            if (success) {
-                Snackbar snackbar = Snackbar
-                        .make(listView, getString(R.string.list_snackbar_message_export_success)
-                                        + " " + dir,
-                                Snackbar.LENGTH_LONG);
-                snackbar.setAction("Open", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mUriExport == null) {
-                            return;
-                        }
-
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(mUriExport, "text/plain");
-                        startActivity(intent);
-                    }
-                });
-                snackbar.show();
-            } else {
-                Snackbar snackbar = Snackbar
-                        .make(listView, getString(R.string.list_snackbar_message_export_failure)
-                                + "" +
-                                " " + dir, Snackbar.LENGTH_LONG);
-                snackbar.show();
-            }
-
-        }
     }
 }

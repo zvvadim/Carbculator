@@ -8,8 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.model.DataCursor;
@@ -33,6 +32,7 @@ import java.util.List;
 
 /**
  * @author Sviatoslav Melnychenko
+ *
  */
 public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
@@ -54,8 +54,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_list, container, false);
 
         initializeWidgets(view);
@@ -66,27 +65,22 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.fragment_food_list, menu);
-
         MenuItem searchItem = menu.findItem(R.id.action_search);
-
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
         searchView.setOnQueryTextListener(new FoodQueryTextListener());
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
 
-        MenuItemCompat
-                .setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-                    @Override
-                    public boolean onMenuItemActionExpand(MenuItem item) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onMenuItemActionCollapse(MenuItem item) {
-                        initLoader();
-                        return true;
-                    }
-                });
-
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                initLoader();
+                return true;
+            }
+        });
     }
 
     private void initLoader() {
@@ -100,14 +94,14 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().finish();
-                return true;
-            case R.id.add_food_menu_item:
-                addFood();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        case android.R.id.home:
+            getActivity().finish();
+            return true;
+        case R.id.add_food_menu_item:
+            addFood();
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -144,6 +138,23 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         setListAdapter(null);
+
+    }
+
+    private class AsyncDeleteFood extends AsyncTask<Food, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Food... params) {
+            for (int i = 0; i < params.length; i++) {
+                nutritionLab.deleteFood(params[i]);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            getLoaderManager().restartLoader(0, null, FoodListFragment.this);
+        }
 
     }
 
@@ -188,23 +199,6 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         intent.putExtra(FoodFragment.EXTRA_FOOD, food);
         intent.putExtra(FoodFragment.EXTRA_REQUEST_CODE, EDIT_FOOD);
         startActivityForResult(intent, EDIT_FOOD);
-    }
-
-    private class AsyncDeleteFood extends AsyncTask<Food, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Food... params) {
-            for (int i = 0; i < params.length; i++) {
-                nutritionLab.deleteFood(params[i]);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            getLoaderManager().restartLoader(0, null, FoodListFragment.this);
-        }
-
     }
 
     private class FoodQueryTextListener implements SearchView.OnQueryTextListener {
