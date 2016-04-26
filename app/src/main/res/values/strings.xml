@@ -68,4 +68,10 @@
     <string name="export_to_csv">Export to CSV</string>
     <string name="exporting">Exporting…</string>
 
+    <string name="dialog_action_open">Open</string>
+    <string name="dialog_message_export_success">You can find report in</string>
+    <string name="dialog_message_export_failure">Failed to export:</string>
+    <string name="dialog_message_no_storage">There is no available public storage</string>
+    <string name="dialog_message_error_creating_directory">Directory not created</string>
+
 </resources>

@@ -1,21 +1,16 @@
 package com.shakenbeer.nutrition.ui;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +35,15 @@ import com.shakenbeer.nutrition.model.DayCursorLoader;
 import com.shakenbeer.nutrition.model.Eating;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
@@ -54,6 +58,8 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     private NutritionLab nutritionLab;
     private DataCursor<Day> dayCursor;
     private ProgressDialog dialog;
+
+    private Uri mUriExport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,7 +136,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
     private void exportToCsv() {
         if (isExternalStorageWritable()) {
-            new AsyncExportToCsv().execute();
+            new AsyncExportToCsv(getActivity()).execute();
 
         }
 
@@ -181,6 +187,54 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
         private volatile String dir;
 
+        private Context context;
+        private String errorDescription;
+
+        public AsyncExportToCsv(Context ctx){
+            context = ctx;
+        }
+
+        private boolean externalStorageAvailable() {
+            return
+                    Environment.MEDIA_MOUNTED
+                            .equals(Environment.getExternalStorageState());
+        }
+
+        protected File getCarbculatorStorageDir() {
+            ListView listView = getListView();
+
+            File path = null;
+
+            dir = Environment.DIRECTORY_DOWNLOADS;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                dir = Environment.DIRECTORY_DOCUMENTS;
+            }
+
+            if (!externalStorageAvailable()) {
+                errorDescription = getString(R.string.dialog_message_no_storage);
+                return null;
+            }
+
+            path = Environment.getExternalStoragePublicDirectory(dir);
+            if (!path.exists()) {
+                dir = "Carbculator";
+                path = Environment.getExternalStorageDirectory();
+                if (!path.exists()) {
+                    errorDescription = getString(R.string.dialog_message_no_storage);
+                    return null;
+                }
+                path = new File(path.getAbsolutePath(), "Carbculator");
+                if (!path.exists()) {
+                    if (!path.mkdirs()) {
+                        errorDescription = getString(R.string.dialog_message_error_creating_directory);
+                        return null;
+                    }
+                }
+            }
+
+            return path;
+        }
+
         @Override
         protected void onPreExecute() {
             dialog.setTitle(R.string.exporting);
@@ -191,17 +245,18 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         protected Boolean doInBackground(Void... params) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-            dir = Environment.DIRECTORY_DOWNLOADS;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                dir = Environment.DIRECTORY_DOCUMENTS;
+            File path = getCarbculatorStorageDir();
+            if (path == null) {
+                return false;
             }
-            File directory = Environment.getExternalStoragePublicDirectory(dir);
-            if (!directory.exists())
-                directory.mkdirs();
-            File file = new File(directory, CARBCULATOR_REPORT_CSV);
 
             CSVWriter csvWrite = null;
             try {
+                File file = new File(path.getAbsolutePath() + "/" +
+                        CARBCULATOR_REPORT_CSV);
+
+                mUriExport = Uri.fromFile(file);
+
                 file.createNewFile();
                 csvWrite = new CSVWriter(new FileWriter(file));
                 List<Eating> eatings = nutritionLab.getEatings();
@@ -239,9 +294,42 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                 dialog.dismiss();
             }
             if (success) {
-                Toast.makeText(getActivity(), "You can find report in " + dir, Toast.LENGTH_LONG).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Export")
+                        .setMessage(getString(R.string.dialog_message_export_success)+ " " + dir)
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNeutralButton("Open",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (mUriExport == null) {
+                                            return;
+                                        }
+
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setDataAndType(mUriExport, "text/plain");
+                                        startActivity(intent);
+
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
             } else {
-                Toast.makeText(getActivity(), "Failed to export data: " + dir, Toast.LENGTH_LONG).show();
+
+                if (errorDescription != null){
+                    Toast.makeText(getActivity(), getString(R.string.dialog_message_no_storage),
+                            Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(getActivity(), getString(R.string.dialog_message_export_failure),
+                        Toast.LENGTH_LONG).show();
             }
 
         }
