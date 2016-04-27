@@ -313,7 +313,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                                         }
 
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setDataAndType(mUriExport, "text/plain");
+                                        intent.setDataAndType(mUriExport, "text/csv");
                                         startActivity(intent);
 
                                         dialog.cancel();
