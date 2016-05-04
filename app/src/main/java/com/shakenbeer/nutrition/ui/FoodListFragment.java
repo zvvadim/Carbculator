@@ -1,13 +1,19 @@
 package com.shakenbeer.nutrition.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +26,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.model.DataCursor;
@@ -27,12 +34,17 @@ import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.FoodCursorLoader;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.bytecode.opencsv.CSVWriter;
+
 /**
  * @author Sviatoslav Melnychenko
- *
  */
 public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
@@ -40,6 +52,9 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     private static final int EDIT_FOOD = 1;
     private NutritionLab nutritionLab;
     private FoodCursorAdapter adapter;
+
+    private ProgressDialog dialog;
+    private Uri uriExport;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +69,8 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_list, container, false);
 
         initializeWidgets(view);
@@ -94,15 +110,34 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case android.R.id.home:
-            getActivity().finish();
-            return true;
-        case R.id.add_food_menu_item:
-            addFood();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
+            case android.R.id.home:
+                getActivity().finish();
+                return true;
+            case R.id.add_food_menu_item:
+                addFood();
+                return true;
+            case R.id.action_csv:
+                exportToCsv();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void exportToCsv() {
+        if (isExternalStorageWritable()) {
+            new AsyncExportToCsv(getActivity()).execute();
+
+        }
+    }
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -141,23 +176,6 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
     }
 
-    private class AsyncDeleteFood extends AsyncTask<Food, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Food... params) {
-            for (int i = 0; i < params.length; i++) {
-                nutritionLab.deleteFood(params[i]);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            getLoaderManager().restartLoader(0, null, FoodListFragment.this);
-        }
-
-    }
-
     private void initializeWidgets(View view) {
         Button addFood = (Button) view.findViewById(R.id.add_food_button);
         addFood.setOnClickListener(new OnClickListener() {
@@ -186,6 +204,8 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
                 new AsyncDeleteFood().execute(toDelete.toArray(new Food[toDelete.size()]));
             }
         });
+
+        dialog = new ProgressDialog(getActivity());
     }
 
     private void addFood() {
@@ -201,6 +221,23 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         startActivityForResult(intent, EDIT_FOOD);
     }
 
+    private class AsyncDeleteFood extends AsyncTask<Food, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Food... params) {
+            for (int i = 0; i < params.length; i++) {
+                nutritionLab.deleteFood(params[i]);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            getLoaderManager().restartLoader(0, null, FoodListFragment.this);
+        }
+
+    }
+
     private class FoodQueryTextListener implements SearchView.OnQueryTextListener {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -214,4 +251,161 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
             return false;
         }
     }
+
+    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
+
+        public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
+        private volatile String dir;
+
+        private Context context;
+        private String errorDescription;
+
+        public AsyncExportToCsv(Context ctx) {
+            context = ctx;
+        }
+
+        private boolean externalStorageAvailable() {
+            return
+                    Environment.MEDIA_MOUNTED
+                            .equals(Environment.getExternalStorageState());
+        }
+
+        protected File getCarbculatorStorageDir() {
+            ListView listView = getListView();
+
+            File path = null;
+
+            dir = Environment.DIRECTORY_DOWNLOADS;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                dir = Environment.DIRECTORY_DOCUMENTS;
+            }
+
+            if (!externalStorageAvailable()) {
+                errorDescription = getString(R.string.dialog_message_no_storage);
+                return null;
+            }
+
+            path = Environment.getExternalStoragePublicDirectory(dir);
+            if (!path.exists()) {
+                dir = "Carbculator";
+                path = Environment.getExternalStorageDirectory();
+                if (!path.exists()) {
+                    errorDescription = getString(R.string.dialog_message_no_storage);
+                    return null;
+                }
+                path = new File(path.getAbsolutePath(), "Carbculator");
+                if (!path.exists()) {
+                    if (!path.mkdirs()) {
+                        errorDescription =
+                                getString(R.string.dialog_message_error_creating_directory);
+                        return null;
+                    }
+                }
+            }
+
+            return path;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setTitle(R.string.exporting);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+            File path = getCarbculatorStorageDir();
+            if (path == null) {
+                return false;
+            }
+
+            CSVWriter csvWrite = null;
+            try {
+                File file = new File(path.getAbsolutePath() + "/" +
+                        CARBCULATOR_FOODCATALOG_CSV);
+
+                uriExport = Uri.fromFile(file);
+
+                file.createNewFile();
+                csvWrite = new CSVWriter(new FileWriter(file));
+                List<Food> foodList = nutritionLab.getFoods();
+                csvWrite.writeNext("name", "proteinPerUnit", "fatPerUnit", "carbsPerUnit",
+                        "kcalPerUnit", "unitName", "unit");
+                String[] en = getResources().getStringArray(R.array.eating_names);
+                for (Food food : foodList) {
+
+                    csvWrite.writeNext(
+                            food.getName(),
+                            String.format("%.1f", food.getProteinPerUnit()),
+                            String.format("%.1f", food.getFatPerUnit()),
+                            String.format("%.1f", food.getCarbsPerUnit()),
+                            String.format("%.1f", food.getKcalPerUnit()),
+                            food.getUnitName(),
+                            String.valueOf(food.getUnit()));
+                }
+
+            } catch (IOException e) {
+                dir = e.getMessage();
+                return false;
+            } finally {
+                try {
+                    if (csvWrite != null) {
+                        csvWrite.close();
+                    }
+                } catch (IOException ignored) {
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (success) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Export")
+                        .setMessage(getString(R.string.dialog_message_export_success) + " " + dir)
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNeutralButton("Open",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (uriExport == null) {
+                                            return;
+                                        }
+
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        intent.setDataAndType(uriExport, "text/csv");
+                                        startActivity(intent);
+
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            } else {
+
+                if (errorDescription != null) {
+                    Toast.makeText(getActivity(), getString(R.string.dialog_message_no_storage),
+                            Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(getActivity(), getString(R.string.dialog_message_export_failure),
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
+
 }
