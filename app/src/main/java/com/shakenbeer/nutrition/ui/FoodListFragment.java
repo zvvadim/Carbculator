@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -386,8 +388,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
                                         }
 
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setDataAndType(uriExport, "text/csv");
-                                        startActivity(intent);
+                                        setProperMimeType(intent);
 
                                         dialog.cancel();
                                     }
@@ -406,6 +407,16 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
             }
 
         }
+    }
+
+    private void setProperMimeType(Intent intent) {
+        PackageManager pm = getActivity().getPackageManager();
+        intent.setDataAndType(uriExport, "text/csv");
+        ResolveInfo info = pm.resolveActivity(intent, 0);
+        if (info == null) {
+            intent.setDataAndType(uriExport, "text/plain");
+        }
+
     }
 
 }

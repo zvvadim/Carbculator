@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -190,7 +192,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
         private Context context;
         private String errorDescription;
 
-        public AsyncExportToCsv(Context ctx){
+        public AsyncExportToCsv(Context ctx) {
             context = ctx;
         }
 
@@ -297,7 +299,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Export")
-                        .setMessage(getString(R.string.dialog_message_export_success)+ " " + dir)
+                        .setMessage(getString(R.string.dialog_message_export_success) + " " + dir)
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
@@ -312,8 +314,10 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                                             return;
                                         }
 
+
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        intent.setDataAndType(mUriExport, "text/csv");
+                                        setProperMimeType(intent);
+
                                         startActivity(intent);
 
                                         dialog.cancel();
@@ -324,7 +328,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
             } else {
 
-                if (errorDescription != null){
+                if (errorDescription != null) {
                     Toast.makeText(getActivity(), getString(R.string.dialog_message_no_storage),
                             Toast.LENGTH_LONG).show();
                 }
@@ -333,6 +337,16 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
             }
 
         }
+    }
+
+    private void setProperMimeType(Intent intent) {
+        PackageManager pm = getActivity().getPackageManager();
+        intent.setDataAndType(mUriExport, "text/csv");
+        ResolveInfo info = pm.resolveActivity(intent, 0);
+        if (info == null) {
+            intent.setDataAndType(mUriExport, "text/plain");
+        }
+
     }
 
     private void initializeWidgets(View view) {
