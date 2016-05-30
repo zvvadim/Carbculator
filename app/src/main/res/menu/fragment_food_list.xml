@@ -15,10 +15,15 @@
         android:title="@string/add_food"/>
 
     <item
-        android:id="@+id/action_csv"
+        android:id="@+id/action_upload_csv"
         android:icon="@android:drawable/ic_menu_upload"
         android:showAsAction="ifRoom|withText"
         android:title="@string/export_to_csv"/>
 
+    <item
+        android:id="@+id/action_download_csv"
+        android:icon="@android:drawable/ic_menu_more"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/import_from_csv"/>
 
 </menu>

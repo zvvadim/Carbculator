@@ -37,12 +37,14 @@ import com.shakenbeer.nutrition.model.FoodCursorLoader;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 /**
@@ -50,6 +52,8 @@ import au.com.bytecode.opencsv.CSVWriter;
  */
 public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
+    public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
+    private static final int REQUEST_IMPORT_FILE = 0;
     private static final int ADD_FOOD = 0;
     private static final int EDIT_FOOD = 1;
     private NutritionLab nutritionLab;
@@ -57,6 +61,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
     private ProgressDialog dialog;
     private Uri uriExport;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,8 +123,11 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
             case R.id.add_food_menu_item:
                 addFood();
                 return true;
-            case R.id.action_csv:
+            case R.id.action_upload_csv:
                 exportToCsv();
+                return true;
+            case R.id.action_download_csv:
+                importFromCsv();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -131,6 +139,13 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
             new AsyncExportToCsv(getActivity()).execute();
 
         }
+    }
+
+    private void importFromCsv() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        setProperMimeType(intent);
+        Intent i = Intent.createChooser(intent, "Choose file");
+        startActivityForResult(i, REQUEST_IMPORT_FILE);
     }
 
     /* Checks if external storage is available for read and write */
@@ -150,11 +165,20 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == EDIT_FOOD) {
-                getActivity().setResult(Activity.RESULT_OK);
+
+        if (requestCode == REQUEST_IMPORT_FILE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getData();
+                new AsyncImportFromCsv(getActivity()).execute(uri);
             }
-            getLoaderManager().restartLoader(0, null, this);
+        } else {
+
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == EDIT_FOOD) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                }
+                getLoaderManager().restartLoader(0, null, this);
+            }
         }
     }
 
@@ -223,6 +247,16 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         startActivityForResult(intent, EDIT_FOOD);
     }
 
+    private void setProperMimeType(Intent intent) {
+        PackageManager pm = getActivity().getPackageManager();
+        intent.setDataAndType(uriExport, "text/csv");
+        ResolveInfo info = pm.resolveActivity(intent, 0);
+        if (info == null) {
+            intent.setDataAndType(uriExport, "text/plain");
+        }
+
+    }
+
     private class AsyncDeleteFood extends AsyncTask<Food, Void, Void> {
 
         @Override
@@ -256,11 +290,9 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
     private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
 
-        public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
-        private volatile String dir;
-
         private Context context;
         private String errorDescription;
+        private volatile String dir;
 
         public AsyncExportToCsv(Context ctx) {
             context = ctx;
@@ -389,6 +421,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
                                         Intent intent = new Intent(Intent.ACTION_VIEW);
                                         setProperMimeType(intent);
+                                        startActivity(intent);
 
                                         dialog.cancel();
                                     }
@@ -409,14 +442,83 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         }
     }
 
-    private void setProperMimeType(Intent intent) {
-        PackageManager pm = getActivity().getPackageManager();
-        intent.setDataAndType(uriExport, "text/csv");
-        ResolveInfo info = pm.resolveActivity(intent, 0);
-        if (info == null) {
-            intent.setDataAndType(uriExport, "text/plain");
+    private class AsyncImportFromCsv extends AsyncTask<Uri, Void, Boolean> {
+
+        private Context context;
+
+        public AsyncImportFromCsv(Context ctx) {
+            context = ctx;
         }
 
+        @Override
+        protected void onPreExecute() {
+            dialog.setTitle(R.string.importing);
+            dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Uri... params) {
+
+            CSVReader csvReader = null;
+            FileReader fileReader = null;
+            try {
+                String path = params[0].getPath();
+                fileReader = new FileReader(new File(path));
+                csvReader = new CSVReader(fileReader);
+                List<String[]> listEntries = csvReader.readAll();
+                for (int i = 1; i < listEntries.size(); i++) {
+                    String[] entry = listEntries.get(i);
+                    Food food = new Food();
+                    food.setName(entry[0]);
+                    food.setProteinPerUnit(Float.parseFloat(entry[1]));
+                    food.setFatPerUnit(Float.parseFloat(entry[2]));
+                    food.setCarbsPerUnit(Float.parseFloat(entry[3]));
+                    food.setKcalPerUnit(Float.parseFloat(entry[4]));
+                    food.setUnitName(entry[5]);
+                    food.setUnit(Integer.parseInt(entry[6]));
+
+                    nutritionLab.saveFood(food);
+                }
+            } catch (IOException e) {
+                return false;
+            } finally {
+                try {
+                    csvReader.close();
+                    fileReader.close();
+                } catch (IOException e) {
+                }
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (success) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Import")
+                        .setMessage(getString(R.string.dialog_message_import_success))
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                initLoader();
+
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.dialog_message_import_failure),
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }
     }
 
 }

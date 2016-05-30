@@ -1,8 +1,5 @@
 package com.shakenbeer.nutrition.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.database.Cursor;
 
@@ -11,6 +8,9 @@ import com.shakenbeer.nutrition.db.DbDayGetter;
 import com.shakenbeer.nutrition.db.DbEatingGetter;
 import com.shakenbeer.nutrition.db.DbFoodGetter;
 import com.shakenbeer.nutrition.db.DbStorage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sviatoslav Melnychenko
@@ -116,7 +116,6 @@ public class NutritionLab {
             storage.updateFood(food);
             return food.getId();
         }
-
     }
 
     public void deleteFood(Food food) {
