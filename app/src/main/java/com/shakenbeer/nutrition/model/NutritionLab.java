@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * @author Sviatoslav Melnychenko
- *
  */
 public class NutritionLab {
 
@@ -40,7 +39,9 @@ public class NutritionLab {
     public DataCursor<Day> getDayCursor() {
         Cursor cursor = storage.queryDays();
         return new DataCursor<Day>(cursor, new DbDayGetter());
-    };
+    }
+
+    ;
 
     public DataCursor<Food> getFoodCursor() {
         Cursor cursor = storage.queryFoods();
