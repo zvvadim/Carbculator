@@ -20,17 +20,5 @@ public class CarbculatorApplication extends Application {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        changeLocale(getApplicationContext());
-    }
-
-    public static void changeLocale(Context c) {
-        String lang = PreferenceManager.getDefaultSharedPreferences(c).getString(APP_LANG, null);
-        if (lang != null) {
-            Resources res = c.getResources();
-            DisplayMetrics dm = res.getDisplayMetrics();
-            Configuration conf = res.getConfiguration();
-            conf.locale = new Locale(lang);
-            res.updateConfiguration(conf, dm);
-        }
     }
 }

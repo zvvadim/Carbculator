@@ -51,7 +51,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 /**
  * @author Sviatoslav Melnychenko
  */
-public class DayListFragment extends ListFragment implements LoaderCallbacks<Cursor>, LanguageDialogFragment.Callbacks {
+public class DayListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
     private static final int OPEN_DAY = 1;
     private static final int ADD_EATING = 2;
@@ -69,8 +69,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
-
-        CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
 
         nutritionLab = NutritionLab.getInstance(getActivity().getApplicationContext());
 
@@ -119,10 +117,6 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                 return true;
             case R.id.food_list_menu_item:
                 openFoodList();
-                return true;
-            case R.id.language_list_menu_item:
-                LanguageDialogFragment fragment = LanguageDialogFragment.newInstance(this);
-                fragment.show(getFragmentManager(), null);
                 return true;
             case R.id.statistics_menu_item:
                 Intent intent = new Intent(getActivity(), StatisticsActivity.class);
@@ -405,31 +399,5 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
     private void openFoodList() {
         Intent intent = new Intent(getActivity(), FoodListActivity.class);
         startActivityForResult(intent, FOOD_LIST);
-    }
-
-    @Override
-    public void onItemSelected(int which) {
-        String newLocale = "en";
-
-        switch (which) {
-            case 0:
-                newLocale = "en";
-                break;
-            case 1:
-                newLocale = "ru_RU";
-                break;
-            case 2:
-                newLocale = "uk_UK";
-                break;
-            default:
-                break;
-        }
-
-        PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).edit()
-                .putString(CarbculatorApplication.APP_LANG, newLocale).commit();
-
-        CarbculatorApplication.changeLocale(getActivity().getApplicationContext());
-
-        getActivity().recreate();
     }
 }
