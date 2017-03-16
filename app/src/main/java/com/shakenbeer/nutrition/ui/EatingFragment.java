@@ -36,7 +36,7 @@ import android.widget.TimePicker;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.model.Component;
-import com.shakenbeer.nutrition.model.Eating;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
@@ -46,21 +46,21 @@ import com.shakenbeer.nutrition.model.NutritionLab;
  */
 public class EatingFragment extends ListFragment implements OnDateSetListener, OnTimeSetListener {
 
-    public static final String EXTRA_EATING = "com.shakenbeer.nutrition.ui.EatingFragment.eating";
+    public static final String EXTRA_EATING = "com.shakenbeer.nutrition.ui.EatingFragment.meal";
     private static final int ADD_FOOD = 0;
     private static final int FOOD_LIST = 1;
     private NutritionLab nutritionLab;
     private ComponentArrayAdapter componentAdapter;
     private ArrayAdapter<Food> foodArrayAdapter;
     private List<Component> toDelete = new ArrayList<>();
-    private Eating eating;
+    private Meal meal;
     private Button dateButton;
     private Button timeButton;
     private Locale locale;
 
-    public static EatingFragment newInstance(Eating eating) {
+    public static EatingFragment newInstance(Meal meal) {
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_EATING, eating);
+        args.putParcelable(EXTRA_EATING, meal);
         EatingFragment fragment = new EatingFragment();
         fragment.setArguments(args);
         return fragment;
@@ -77,9 +77,9 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
 
         nutritionLab = NutritionLab.getInstance(getActivity().getApplicationContext());
 
-        eating = getArguments().getParcelable(EXTRA_EATING);
+        meal = getArguments().getParcelable(EXTRA_EATING);
 
-        new AsyncComponentLoad().execute(eating);
+        new AsyncComponentLoad().execute(meal);
     }
 
     @Override
@@ -132,34 +132,34 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(eating.getDate());
+        calendar.setTime(meal.getDate());
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
         calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
-        eating.setDate(calendar.getTime());
+        meal.setDate(calendar.getTime());
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
-        dateButton.setText(df.format(eating.getDate()));
+        dateButton.setText(df.format(meal.getDate()));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(eating.getDate());
+        calendar.setTime(meal.getDate());
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         calendar = new GregorianCalendar(year, month, day, hourOfDay, minute);
-        eating.setDate(calendar.getTime());
+        meal.setDate(calendar.getTime());
         DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
-        timeButton.setText(df.format(eating.getDate()));
+        timeButton.setText(df.format(meal.getDate()));
     }
 
-    private class AsyncComponentLoad extends AsyncTask<Eating, Void, List<Component>> {
+    private class AsyncComponentLoad extends AsyncTask<Meal, Void, List<Component>> {
 
         @Override
-        protected List<Component> doInBackground(Eating... params) {
+        protected List<Component> doInBackground(Meal... params) {
             return nutritionLab.getComponents(params[0]);
         }
 
@@ -174,7 +174,7 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
 
         @Override
         protected Void doInBackground(Void... params) {
-            long eatingId = nutritionLab.saveEating(eating);
+            long eatingId = nutritionLab.saveEating(meal);
             for (int i = 0; i < componentAdapter.getCount(); i++) {
                 nutritionLab.saveComponent(componentAdapter.getItem(i), eatingId);
             }
@@ -190,7 +190,7 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
 
         @Override
         protected Void doInBackground(Void... params) {
-            nutritionLab.deleteEating(eating);
+            nutritionLab.deleteEating(meal);
             return null;
         }
 
@@ -210,7 +210,7 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
         dateButton = (Button) view.findViewById(R.id.eating_date_button);
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM,
                 getActivity().getResources().getConfiguration().locale);
-        dateButton.setText(df.format(eating.getDate()));
+        dateButton.setText(df.format(meal.getDate()));
         dateButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -221,7 +221,7 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
 
         timeButton = (Button) view.findViewById(R.id.eating_time_button);
         df = DateFormat.getTimeInstance(DateFormat.SHORT, getActivity().getResources().getConfiguration().locale);
-        timeButton.setText(df.format(eating.getDate()));
+        timeButton.setText(df.format(meal.getDate()));
         timeButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -236,13 +236,13 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
                 R.layout.spinner_item_eating);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_eating);
         eatingSpinner.setAdapter(adapter);
-        eatingSpinner.setSelection(eating.getNumber());
+        eatingSpinner.setSelection(meal.getNumber());
 
         eatingSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                eating.setNumber(position);
+                meal.setNumber(position);
             }
 
             @Override
@@ -269,20 +269,20 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
             }
         });
 
-        if (eating.getId() > 0) {
+        if (meal.getId() > 0) {
             TextView newEatingTextView = (TextView) view.findViewById(R.id.new_eating_text_view);
-            newEatingTextView.setText(getActivity().getResources().getStringArray(R.array.eating_names)[eating
+            newEatingTextView.setText(getActivity().getResources().getStringArray(R.array.eating_names)[meal
                     .getNumber()]);
         }
     }
 
     private void changeDate() {
-        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(this, eating.getDate());
+        DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(this, meal.getDate());
         datePickerFragment.show(getFragmentManager(), null);
     }
 
     private void changeTime() {
-        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(this, eating.getDate());
+        TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(this, meal.getDate());
         timePickerFragment.show(getFragmentManager(), null);
     }
 
@@ -294,7 +294,7 @@ public class EatingFragment extends ListFragment implements OnDateSetListener, O
     }
 
     private void deleteEating() {
-        if (eating.getId() > 0) {
+        if (meal.getId() > 0) {
             new AsyncDeleteEating().execute();
             getActivity().setResult(Activity.RESULT_OK);
         }

@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.model.Day;
-import com.shakenbeer.nutrition.model.Eating;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
 /**
@@ -86,7 +86,7 @@ public class DayFragment extends ListFragment {
             return true;
         case R.id.add_eating_menu_item:
             Calendar target = mergeDateTime();
-            openEating(new Eating(target.getTime()));
+            openEating(new Meal(target.getTime()));
             return true;
         case R.id.delete_day_menu_item:
             deleteDay();
@@ -101,8 +101,8 @@ public class DayFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Eating eating = (Eating) getListAdapter().getItem(position);
-        openEating(eating);
+        Meal meal = (Meal) getListAdapter().getItem(position);
+        openEating(meal);
     }
 
     @Override
@@ -120,25 +120,25 @@ public class DayFragment extends ListFragment {
         }
     }
 
-    private class AsyncEatingsLoad extends AsyncTask<Day, Void, List<Eating>> {
+    private class AsyncEatingsLoad extends AsyncTask<Day, Void, List<Meal>> {
 
         @Override
-        protected List<Eating> doInBackground(Day... params) {
+        protected List<Meal> doInBackground(Day... params) {
             return nutritionLab.getEatings(day);
         }
 
         @Override
-        protected void onPostExecute(List<Eating> result) {
+        protected void onPostExecute(List<Meal> result) {
             eatingAdapter = new EatingArrayAdapter(getActivity(), result);
             setListAdapter(eatingAdapter);
             refreshDay();
         }
     }
 
-    private class AsyncDeleteEating extends AsyncTask<Eating, Void, Void> {
+    private class AsyncDeleteEating extends AsyncTask<Meal, Void, Void> {
 
         @Override
-        protected Void doInBackground(Eating... params) {
+        protected Void doInBackground(Meal... params) {
             for (int i = 0; i < params.length; i++) {
                 nutritionLab.deleteEating(params[i]);
             }
@@ -157,7 +157,7 @@ public class DayFragment extends ListFragment {
             @Override
             public void onClick(View v) {
                 Calendar target = mergeDateTime();
-                openEating(new Eating(target.getTime()));
+                openEating(new Meal(target.getTime()));
             }
         });
 
@@ -168,35 +168,35 @@ public class DayFragment extends ListFragment {
 
             @Override
             public void deleteSelectedItems() {
-                List<Eating> toDelete = new ArrayList<>();
+                List<Meal> toDelete = new ArrayList<>();
                 for (int i = 0; i < eatingAdapter.getCount(); i++) {
                     if (getListView().isItemChecked(i)) {
-                        Eating eating = eatingAdapter.getItem(i);
-                        toDelete.add(eating);
-                        eatingAdapter.remove(eating);
+                        Meal meal = eatingAdapter.getItem(i);
+                        toDelete.add(meal);
+                        eatingAdapter.remove(meal);
                     }
                 }
                 refreshDay();
-                new AsyncDeleteEating().execute(toDelete.toArray(new Eating[toDelete.size()]));
+                new AsyncDeleteEating().execute(toDelete.toArray(new Meal[toDelete.size()]));
                 getActivity().setResult(Activity.RESULT_OK);
             }
         });
     }
 
     private void refreshDay() {
-        List<Eating> eatings = new ArrayList<>();
+        List<Meal> meals = new ArrayList<>();
         for (int i = 0; i < eatingAdapter.getCount(); i++) {
-            eatings.add(eatingAdapter.getItem(i));
+            meals.add(eatingAdapter.getItem(i));
         }
         float protein = 0;
         float fat = 0;
         float carbs = 0;
         float kcal = 0;
-        for (Eating eating : eatings) {
-            protein += eating.getProtein();
-            fat += eating.getFat();
-            carbs += eating.getCarbs();
-            kcal += eating.getKcal();
+        for (Meal meal : meals) {
+            protein += meal.getProtein();
+            fat += meal.getFat();
+            carbs += meal.getCarbs();
+            kcal += meal.getKcal();
         }
         day.setProtein(protein);
         day.setFat(fat);
@@ -232,14 +232,14 @@ public class DayFragment extends ListFragment {
         pdcTextView.setText(getActivity().getResources().getString(R.string.pfc_ratio) + day.getPfcRatio());
     }
 
-    private void openEating(Eating eating) {
+    private void openEating(Meal meal) {
         Intent intent = new Intent(getActivity(), EatingActivity.class);
-        intent.putExtra(EatingFragment.EXTRA_EATING, eating);
+        intent.putExtra(EatingFragment.EXTRA_EATING, meal);
         startActivityForResult(intent, OPEN_EATING);
     }
 
     private void deleteDay() {
-        Eating[] toDelete = new Eating[eatingAdapter.getCount()];
+        Meal[] toDelete = new Meal[eatingAdapter.getCount()];
         for (int i = 0; i < eatingAdapter.getCount(); i++) {
             toDelete[i] = eatingAdapter.getItem(i);
             new AsyncDeleteEating().execute(toDelete);

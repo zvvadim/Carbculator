@@ -11,14 +11,14 @@
     <string name="fat_per_unit">Fat per unit</string>
     <string name="kcal_per_unit">Kcal per unit</string>
     <string name="ingredient_grams">Food amount</string>
-    <string name="add_eating">Add eating</string>
+    <string name="add_eating">Add meal</string>
     <string name="add_food">Add food</string>
     <string name="add_food_to_list">Add food to list</string>
     <string name="add">Add</string>
-    <string name="delete_eating">Delete eating</string>
+    <string name="delete_eating">Delete meal</string>
     <string name="delete_day">Delete day</string>
     <string name="delete_food">Delete food</string>
-    <string name="new_eating">New eating</string>
+    <string name="new_eating">New meal</string>
     <string name="save">Save</string>
     <string name="food_list">Food list</string>
     <string name="food_name">Food name</string>

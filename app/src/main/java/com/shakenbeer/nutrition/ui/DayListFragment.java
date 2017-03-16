@@ -16,7 +16,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,12 +28,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.model.DataCursor;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.DayCursorLoader;
-import com.shakenbeer.nutrition.model.Eating;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.model.NutritionLab;
 
 import java.io.File;
@@ -255,18 +253,18 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
                 file.createNewFile();
                 csvWrite = new CSVWriter(new FileWriter(file));
-                List<Eating> eatings = nutritionLab.getEatings();
+                List<Meal> meals = nutritionLab.getEatings();
                 csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
                 String[] en = getResources().getStringArray(R.array.eating_names);
-                for (Eating eating : eatings) {
+                for (Meal meal : meals) {
 
                     csvWrite.writeNext(
-                            sdf.format(eating.getDate()),
-                            String.valueOf(en[eating.getNumber()]),
-                            String.format("%.1f", eating.getKcal()),
-                            String.format("%.1f", eating.getProtein()),
-                            String.format("%.1f", eating.getFat()),
-                            String.format("%.1f", eating.getCarbs()));
+                            sdf.format(meal.getDate()),
+                            String.valueOf(en[meal.getNumber()]),
+                            String.format("%.1f", meal.getKcal()),
+                            String.format("%.1f", meal.getProtein()),
+                            String.format("%.1f", meal.getFat()),
+                            String.format("%.1f", meal.getCarbs()));
                 }
 
             } catch (IOException e) {
@@ -392,7 +390,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
     private void addEating() {
         Intent intent = new Intent(getActivity(), EatingActivity.class);
-        intent.putExtra(EatingFragment.EXTRA_EATING, new Eating(new Date()));
+        intent.putExtra(EatingFragment.EXTRA_EATING, new Meal(new Date()));
         startActivityForResult(intent, ADD_EATING);
     }
 

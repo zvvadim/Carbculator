@@ -9,7 +9,7 @@ import android.os.Parcelable;
  * @author Sviatoslav Melnychenko
  *
  */
-public class Eating implements Parcelable {
+public class Meal implements Parcelable {
     
     private long id;
     
@@ -42,19 +42,19 @@ public class Eating implements Parcelable {
         
     }
     
-    public static final Parcelable.Creator<Eating> CREATOR = new Parcelable.Creator<Eating>() {
+    public static final Parcelable.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
         @Override
-        public Eating createFromParcel(Parcel in) {
-            return new Eating(in);
+        public Meal createFromParcel(Parcel in) {
+            return new Meal(in);
         }
 
         @Override
-        public Eating[] newArray(int size) {
-            return new Eating[size];
+        public Meal[] newArray(int size) {
+            return new Meal[size];
         }
     };
 
-    private Eating(Parcel in) {
+    private Meal(Parcel in) {
         id = in.readLong();
         number = in.readInt();
         protein = in.readFloat();
@@ -73,12 +73,12 @@ public class Eating implements Parcelable {
         return p + "/" + f + "/" + c;
     }
     
-    public Eating(Date date) {
+    public Meal(Date date) {
         id = -1;
         this.date = date;
     }
 
-    public Eating() {
+    public Meal() {
         id = -1;
     }
 

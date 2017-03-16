@@ -19,7 +19,7 @@ import com.shakenbeer.nutrition.db.DBContract.ComponentTable;
 import com.shakenbeer.nutrition.db.DBContract.EatingTable;
 import com.shakenbeer.nutrition.db.DBContract.FoodTable;
 import com.shakenbeer.nutrition.model.Component;
-import com.shakenbeer.nutrition.model.Eating;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Storage;
 
@@ -168,7 +168,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @Override
-    public Cursor queryComponents(Eating eating) {
+    public Cursor queryComponents(Meal meal) {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
         queryBuilder.setTables(JOIN_COMP_FOOD_TABLES);
@@ -176,7 +176,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
         String[] columns = new String[] { ComponentTable.FULL_ID + " as " + _ID, ComponentTable.COLUMN_FOOD_ID,
                 ComponentTable.COLUMN_GRAMS, FoodTable.COLUMN_NAME, FoodTable.COLUMN_UNIT_NAME };
 
-        String selection = ComponentTable.COLUMN_EATING_ID + " = " + eating.getId();
+        String selection = ComponentTable.COLUMN_EATING_ID + " = " + meal.getId();
 
         Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, selection, null, null, null, null);
 
@@ -213,20 +213,20 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @Override
-    public long insertEating(Eating eating) {
-        ContentValues values = setEatingValues(eating);
+    public long insertEating(Meal meal) {
+        ContentValues values = setEatingValues(meal);
         return getWritableDatabase().insert(EatingTable.TABLE_NAME, null, values);
     }
 
     @Override
-    public void updateEating(Eating eating) {
-        ContentValues values = setEatingValues(eating);
-        getWritableDatabase().update(EatingTable.TABLE_NAME, values, BaseColumns._ID + " = " + eating.getId(), null);
+    public void updateEating(Meal meal) {
+        ContentValues values = setEatingValues(meal);
+        getWritableDatabase().update(EatingTable.TABLE_NAME, values, BaseColumns._ID + " = " + meal.getId(), null);
     }
 
     @Override
-    public void deleteEating(Eating eating) {
-        getWritableDatabase().delete(EatingTable.TABLE_NAME, BaseColumns._ID + " = " + eating.getId(), null);
+    public void deleteEating(Meal meal) {
+        getWritableDatabase().delete(EatingTable.TABLE_NAME, BaseColumns._ID + " = " + meal.getId(), null);
 
     }
 
@@ -249,9 +249,9 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @Override
-    public void deleteComponents(Eating eating) {
+    public void deleteComponents(Meal meal) {
         getWritableDatabase().delete(ComponentTable.TABLE_NAME,
-                ComponentTable.COLUMN_EATING_ID + " = " + eating.getId(), null);
+                ComponentTable.COLUMN_EATING_ID + " = " + meal.getId(), null);
     }
 
     private ContentValues setFoodValues(Food food) {
@@ -267,11 +267,11 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private ContentValues setEatingValues(Eating eating) {
+    private ContentValues setEatingValues(Meal meal) {
         ContentValues values = new ContentValues();
-        String date = new SimpleDateFormat(DbStorage.SQLITE_DATETIME_FORMAT).format(eating.getDate());
+        String date = new SimpleDateFormat(DbStorage.SQLITE_DATETIME_FORMAT).format(meal.getDate());
         values.put(EatingTable.COLUMN_DATE, date);
-        values.put(EatingTable.COLUMN_NUMBER, eating.getNumber());
+        values.put(EatingTable.COLUMN_NUMBER, meal.getNumber());
         return values;
     }
 
