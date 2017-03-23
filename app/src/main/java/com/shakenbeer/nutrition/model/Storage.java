@@ -1,6 +1,8 @@
 package com.shakenbeer.nutrition.model;
 
 import java.util.Date;
+import java.util.List;
+
 import android.database.Cursor;
 
 /**
@@ -43,5 +45,8 @@ public interface Storage {
 
     void deleteEating(Meal meal);
 
-    
+
+    Cursor queryDays(int page, int offset);
+
+    Cursor queryFoods(int page, int offset);
 }

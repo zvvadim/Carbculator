@@ -230,6 +230,18 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
     }
 
+    //TODO implement next two methods
+
+    @Override
+    public Cursor queryDays(int page, int offset) {
+        return null;
+    }
+
+    @Override
+    public Cursor queryFoods(int page, int offset) {
+        return null;
+    }
+
     @Override
     public long insertComponent(Component component, long eatingId) {
         ContentValues values = setComponentsValues(component, eatingId);

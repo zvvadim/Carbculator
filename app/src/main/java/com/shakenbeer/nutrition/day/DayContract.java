@@ -1,20 +1,24 @@
 package com.shakenbeer.nutrition.day;
 
 
+import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Meal;
+import com.shakenbeer.nutrition.presentation.BasePresenter;
+import com.shakenbeer.nutrition.presentation.MvpView;
 
 import java.util.Date;
 import java.util.List;
 
-public class DayContract {
+public interface DayContract {
 
-    interface View {
-        void showEatings(List<Meal> meals);
-        void showEating(long id);
+    interface View extends MvpView {
+        void showMeals(List<Meal> meals);
+        void showMealUi(Meal meal);
+        void showError(String message);
     }
 
-    interface Presenter {
-        void obtainEatings(Date date);
-        void onEatingClick(Meal meal);
+    abstract class Presenter extends BasePresenter<View> {
+        abstract void obtainMeals(Day day);
+        abstract void onMealClick(Meal meal);
     }
 }

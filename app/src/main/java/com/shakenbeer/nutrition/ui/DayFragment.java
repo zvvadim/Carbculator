@@ -124,7 +124,7 @@ public class DayFragment extends ListFragment {
 
         @Override
         protected List<Meal> doInBackground(Day... params) {
-            return nutritionLab.getEatings(day);
+            return nutritionLab.getMeals(day);
         }
 
         @Override

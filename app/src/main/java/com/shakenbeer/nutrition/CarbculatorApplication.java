@@ -9,16 +9,24 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 
+import com.shakenbeer.nutrition.injection.ApplicationComponent;
+import com.shakenbeer.nutrition.injection.ApplicationModule;
+import com.shakenbeer.nutrition.injection.DaggerApplicationComponent;
+
 /**
  * @author Sviatoslav Melnychenko
  *
  */
 public class CarbculatorApplication extends Application {
 
-    public final static String APP_LANG = "app_lang";
+    private ApplicationComponent applicationComponent;
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    public ApplicationComponent getComponent() {
+        if (applicationComponent == null) {
+            applicationComponent = DaggerApplicationComponent.builder()
+                    .applicationModule(new ApplicationModule(this))
+                    .build();
+        }
+        return applicationComponent;
     }
 }

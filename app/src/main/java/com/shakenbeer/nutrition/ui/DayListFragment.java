@@ -253,7 +253,7 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
 
                 file.createNewFile();
                 csvWrite = new CSVWriter(new FileWriter(file));
-                List<Meal> meals = nutritionLab.getEatings();
+                List<Meal> meals = nutritionLab.getMeals();
                 csvWrite.writeNext("date", "number", "kcal", "protein", "fat", "carbs");
                 String[] en = getResources().getStringArray(R.array.eating_names);
                 for (Meal meal : meals) {
