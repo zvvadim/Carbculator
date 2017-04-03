@@ -47,4 +47,9 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     void onDayClick(Day day) {
         getMvpView().showDayUi(day);
     }
+
+    @Override
+    void onAddMealClick() {
+
+    }
 }

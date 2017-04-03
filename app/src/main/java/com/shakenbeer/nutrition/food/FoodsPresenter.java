@@ -49,6 +49,6 @@ public class FoodsPresenter extends FoodsContract.Presenter {
 
     @Override
     void onNewFoodClick() {
-        getMvpView().showNewFoodUi();
+        getMvpView().showFoodUi(new Food());
     }
 }

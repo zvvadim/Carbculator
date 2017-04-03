@@ -47,4 +47,9 @@ public class DayPresenter extends DayContract.Presenter {
     void onMealClick(Meal meal) {
         getMvpView().showMealUi(meal);
     }
+
+    @Override
+    void onAddMealClick() {
+
+    }
 }
