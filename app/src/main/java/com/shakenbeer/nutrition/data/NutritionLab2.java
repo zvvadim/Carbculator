@@ -17,6 +17,7 @@ import com.shakenbeer.nutrition.model.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -117,7 +118,7 @@ public class NutritionLab2 {
         return list;
     }
 
-    public Single<List<Food>> getFoodsRx(int page, int offset){
+    public Single<List<Food>> getFoodsRx(int page, int offset) {
         return Single.just(getFoods(page, offset));
     }
 
@@ -158,6 +159,15 @@ public class NutritionLab2 {
         storage.updateMarkDeleted(food);
     }
 
+    public Single<Long> saveMealRx(final Meal meal) {
+        return Single.fromCallable(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return saveEating(meal);
+            }
+        });
+    }
+
     public long saveEating(Meal meal) {
         if (meal.getId() < 0) {
             return storage.insertEating(meal);
@@ -168,11 +178,21 @@ public class NutritionLab2 {
 
     }
 
-    public void saveComponent(Component component, long eatingId) {
+    public Single<Long> saveComponentRx(final Component component, final long mealId) {
+        return Single.fromCallable(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return saveComponent(component, mealId);
+            }
+        });
+    }
+
+    public long saveComponent(Component component, long mealId) {
         if (component.getId() < 0) {
-            storage.insertComponent(component, eatingId);
+            return storage.insertComponent(component, mealId);
         } else {
-            storage.updateComponent(component, eatingId);
+            storage.updateComponent(component, mealId);
+            return component.getId();
         }
 
     }
@@ -184,7 +204,6 @@ public class NutritionLab2 {
     public void deleteEating(Meal meal) {
         storage.deleteComponents(meal);
         storage.deleteEating(meal);
-
     }
 
     public void deleteDay(Day day) {

@@ -53,7 +53,7 @@ public class NutritionLab {
         return new DataCursor<Food>(cursor, new DbFoodGetter());
     }
 
-    public List<Meal> getEatings(Day day) {
+    public List<Meal> getMeals(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
         DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
         List<Meal> list = new ArrayList<Meal>();
@@ -67,7 +67,7 @@ public class NutritionLab {
         return list;
     }
 
-    public List<Meal> getEatings() {
+    public List<Meal> getMeals() {
         Cursor cursor = storage.queryEatings();
         DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
         List<Meal> list = new ArrayList<Meal>();

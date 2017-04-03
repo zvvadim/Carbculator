@@ -11,7 +11,6 @@ public interface FoodsContract {
 
     interface View extends MvpView {
         void showFoods(List<Food> foods);
-        void showNewFoodUi();
         void showFoodUi(Food food );
         void removeFood(Food food);
         void showError(String message);

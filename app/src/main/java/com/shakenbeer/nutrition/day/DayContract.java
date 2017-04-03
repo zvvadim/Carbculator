@@ -12,13 +12,16 @@ import java.util.List;
 public interface DayContract {
 
     interface View extends MvpView {
+        void showDay(Day day);
         void showMeals(List<Meal> meals);
         void showMealUi(Meal meal);
         void showError(String message);
+        void showPreviusUi();
     }
 
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainMeals(Day day);
         abstract void onMealClick(Meal meal);
+        abstract void onAddMealClick();
     }
 }

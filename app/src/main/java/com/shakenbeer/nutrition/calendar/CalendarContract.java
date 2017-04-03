@@ -2,6 +2,7 @@ package com.shakenbeer.nutrition.calendar;
 
 
 import com.shakenbeer.nutrition.model.Day;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.presentation.BasePresenter;
 import com.shakenbeer.nutrition.presentation.MvpPresenter;
 import com.shakenbeer.nutrition.presentation.MvpView;
@@ -15,10 +16,12 @@ public interface CalendarContract {
         void showDays(List<Day> days);
         void showDayUi(Day day);
         void showError(String message);
+        void showMealUi(Meal meal);
     }
 
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainDays();
         abstract void onDayClick(Day day);
+        abstract void onAddMealClick();
     }
 }
