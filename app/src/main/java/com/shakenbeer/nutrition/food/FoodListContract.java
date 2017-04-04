@@ -7,7 +7,7 @@ import com.shakenbeer.nutrition.presentation.MvpView;
 
 import java.util.List;
 
-public interface FoodsContract {
+public interface FoodListContract {
 
     interface View extends MvpView {
         void showFoods(List<Food> foods);

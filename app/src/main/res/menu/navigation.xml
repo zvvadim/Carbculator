@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_calendar"
+        android:icon="@drawable/numeric_1_box"
+        android:title="@string/calendar" />
+
+    <item
+        android:id="@+id/navigation_food_list"
+        android:icon="@drawable/numeric_2_box"
+        android:title="@string/food_list" />
+
+    <item
+        android:id="@+id/navigation_statistics"
+        android:icon="@drawable/numeric_3_box"
+        android:title="@string/statistics" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/numeric_4_box"
+        android:title="@string/settings" />
+
+
+</menu>

@@ -21,4 +21,10 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/export_to_csv"/>
 
+    <item
+        android:id="@+id/action_new_version"
+        android:icon="@android:drawable/ic_menu_upload"
+        android:showAsAction="never"
+        android:title="New version"/>
+
 </menu>

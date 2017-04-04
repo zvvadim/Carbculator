@@ -13,14 +13,14 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class FoodsPresenter extends FoodsContract.Presenter {
+public class FoodListPresenter extends FoodListContract.Presenter {
 
     private static final int OFFSET = 100;
     private final NutritionLab2 nutritionLab2;
     private int page = 0;
 
     @Inject
-    public FoodsPresenter(NutritionLab2 nutritionLab2) {
+    public FoodListPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 

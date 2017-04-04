@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.R;
+import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.DataCursor;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.DayCursorLoader;
@@ -122,6 +123,10 @@ public class DayListFragment extends ListFragment implements LoaderCallbacks<Cur
                 return true;
             case R.id.action_csv:
                 exportToCsv();
+                return true;
+            case R.id.action_new_version:
+                Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(mainIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
