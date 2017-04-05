@@ -4,11 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.model.Day;
+import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
 
 import java.util.List;
@@ -24,25 +25,40 @@ public class CalendarView extends RecyclerView implements CalendarContract.View 
 
     public CalendarView(Context context) {
         super(context);
+        injectDependencies(context);
+        initUi(context);
+        initListeners();
+    }
+
+    private void injectDependencies(Context context) {
         DaggerCalendarComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(context).getComponent())
                 .calendarModule(new CalendarModule())
                 .build()
                 .inject(this);
+    }
 
+    private void initUi(Context context) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         setLayoutManager(layoutManager);
         addItemDecoration(new DividerItemDecoration(context, layoutManager.getOrientation()));
         setAdapter(adapter);
+    }
 
-        addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+    private void initListeners() {
+        adapter.setItemClickListener(new BindingAdapter.ItemClickListener<Day>() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.d("CalendarView", "onLoadMore");
-                presenter.obtainDays();
+            public void onClick(Day day, int position, View... shared) {
+                presenter.onDayClick(day);
             }
         });
 
+        addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                presenter.obtainDays();
+            }
+        });
     }
 
     @Override

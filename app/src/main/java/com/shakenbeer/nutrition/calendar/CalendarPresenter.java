@@ -34,11 +34,7 @@ public class CalendarPresenter extends CalendarContract.Presenter {
                 .subscribe(new Consumer<List<Day>>() {
                     @Override
                     public void accept(@NonNull List<Day> days) throws Exception {
-                        page++;
-                        getMvpView().showDays(days);
-                        if (days.size() < OFFSET) {
-                            thatsAll();
-                        }
+                        process(days);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -46,6 +42,14 @@ public class CalendarPresenter extends CalendarContract.Presenter {
                         getMvpView().showError(throwable.getLocalizedMessage());
                     }
                 });
+    }
+
+    private void process(@NonNull List<Day> days) {
+        page++;
+        getMvpView().showDays(days);
+        if (days.size() < OFFSET) {
+            thatsAll();
+        }
     }
 
     private void thatsAll() {
