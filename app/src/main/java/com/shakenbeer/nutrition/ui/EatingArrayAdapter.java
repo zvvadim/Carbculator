@@ -52,7 +52,7 @@ public class EatingArrayAdapter extends ArrayAdapter<Meal> {
                 + String.format("%.1f", meal.getKcal()));
         
         TextView pfcTextView = (TextView) convertView.findViewById(R.id.pfc_ratio);
-        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio) + meal.getPfcRatio());
+        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio_colon) + meal.getPfcRatio());
 
         return convertView;
     }

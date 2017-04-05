@@ -18,7 +18,7 @@ public interface MealContract {
         void showNewComponent(Component component);
         void removeComponent(Component component, int index);
         void showError(String message);
-        void showPreviusUi();
+        void showPreviousUi();
     }
 
     abstract class Presenter extends BasePresenter<View> {

@@ -60,7 +60,7 @@ public class DayCursorAdapter extends CursorAdapter {
                 + String.format("%.1f", day.getKcal()));
 
         TextView pfcTextView = (TextView) view.findViewById(R.id.pfc_ratio);
-        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio) + day.getPfcRatio());
+        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio_colon) + day.getPfcRatio());
 
     }
 

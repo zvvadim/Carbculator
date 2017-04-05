@@ -37,7 +37,7 @@
         <item>Перекус</item>
     </string-array>
 
-    <string name="pfc_ratio">"БЖУ: "</string>
+    <string name="pfc_ratio_colon">"БЖУ: "</string>
     <string name="language">Язык</string>
 
     <string-array name="languages">

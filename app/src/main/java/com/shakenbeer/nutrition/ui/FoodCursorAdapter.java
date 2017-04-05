@@ -67,7 +67,7 @@ public class FoodCursorAdapter extends CursorAdapter {
                 + String.format("%.1f", food.getKcalPerUnit()));
         
         TextView pfcTextView = (TextView) view.findViewById(R.id.pfc_ratio);
-        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio) + food.getPfcRatio());
+        pfcTextView.setText(context.getResources().getString(R.string.pfc_ratio_colon) + food.getPfcRatio());
 
     }
 

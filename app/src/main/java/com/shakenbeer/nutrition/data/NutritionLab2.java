@@ -1,13 +1,11 @@
 package com.shakenbeer.nutrition.data;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.shakenbeer.nutrition.db.DbComponentGetter;
 import com.shakenbeer.nutrition.db.DbDayGetter;
 import com.shakenbeer.nutrition.db.DbEatingGetter;
 import com.shakenbeer.nutrition.db.DbFoodGetter;
-import com.shakenbeer.nutrition.db.DbStorage;
 import com.shakenbeer.nutrition.model.Component;
 import com.shakenbeer.nutrition.model.DataCursor;
 import com.shakenbeer.nutrition.model.Day;

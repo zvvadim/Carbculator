@@ -234,7 +234,24 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
     @Override
     public Cursor queryDays(int page, int offset) {
-        return null;
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+
+        queryBuilder.setTables(JOIN_ALL_TABLES);
+
+        String[] columns = new String[] { DATE_FROM_EATING_DATE + " as " + _ID,
+                componentAmount(FoodTable.COLUMN_PROTEIN), componentAmount(FoodTable.COLUMN_CARBS),
+                componentAmount(FoodTable.COLUMN_FAT), componentAmount(FoodTable.COLUMN_KCAL) };
+
+        String groupBy = DATE_FROM_EATING_DATE;
+
+        String sortOrder = DATE_FROM_EATING_DATE + " desc";
+
+        String limit = page * offset + "," + offset;
+
+        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, null, sortOrder, limit);
+
+        return cursor;
+
     }
 
     @Override

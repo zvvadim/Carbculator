@@ -5,17 +5,19 @@ import com.shakenbeer.nutrition.presentation.BasePresenter;
 import com.shakenbeer.nutrition.presentation.MvpView;
 
 public interface MainContract {
-    interface MainView extends MvpView {
+    interface View extends MvpView {
         void showCalendarUi();
-        void showFoodsUi();
-        void showStaticticUi();
+        void showFoodListUi();
+        void showStatisticUi();
         void showSettingsUi();
+        void showNewMealUi();
     }
 
-    abstract class MainPresenter extends BasePresenter<MainView> {
+    abstract class Presenter extends BasePresenter<View> {
         abstract void onCalendarClick();
-        abstract void onFoodsClick();
+        abstract void onFoodListClick();
         abstract void onStatisticClick();
         abstract void onSettingsClick();
+        abstract void onAddMealClick();
     }
 }

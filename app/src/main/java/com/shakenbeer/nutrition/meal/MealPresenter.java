@@ -83,7 +83,7 @@ public class MealPresenter extends MealContract.Presenter {
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        getMvpView().showPreviusUi();
+                        getMvpView().showPreviousUi();
                     }
                 }, new Consumer<Throwable>() {
                     @Override

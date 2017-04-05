@@ -229,7 +229,7 @@ public class DayFragment extends ListFragment {
                 + String.format("%.1f", day.getKcal()));
 
         TextView pdcTextView = (TextView) dayView.findViewById(R.id.pfc_ratio);
-        pdcTextView.setText(getActivity().getResources().getString(R.string.pfc_ratio) + day.getPfcRatio());
+        pdcTextView.setText(getActivity().getResources().getString(R.string.pfc_ratio_colon) + day.getPfcRatio());
     }
 
     private void openEating(Meal meal) {

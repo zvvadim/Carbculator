@@ -18,6 +18,7 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     private static final int OFFSET = 100;
     private final NutritionLab2 nutritionLab2;
     private int page = 0;
+    private boolean everythingIsHere = false;
 
     @Inject
     public CalendarPresenter(NutritionLab2 nutritionLab2) {
@@ -26,6 +27,7 @@ public class CalendarPresenter extends CalendarContract.Presenter {
 
     @Override
     void obtainDays() {
+        if (everythingIsHere) return;
         nutritionLab2.getDaysRx(page, OFFSET)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -34,6 +36,9 @@ public class CalendarPresenter extends CalendarContract.Presenter {
                     public void accept(@NonNull List<Day> days) throws Exception {
                         page++;
                         getMvpView().showDays(days);
+                        if (days.size() < OFFSET) {
+                            thatsAll();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -43,13 +48,12 @@ public class CalendarPresenter extends CalendarContract.Presenter {
                 });
     }
 
-    @Override
-    void onDayClick(Day day) {
-        getMvpView().showDayUi(day);
+    private void thatsAll() {
+        everythingIsHere = true;
     }
 
     @Override
-    void onAddMealClick() {
-
+    void onDayClick(Day day) {
+        getMvpView().showDayUi(day);
     }
 }

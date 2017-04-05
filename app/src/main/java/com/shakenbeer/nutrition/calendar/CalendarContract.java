@@ -16,12 +16,10 @@ public interface CalendarContract {
         void showDays(List<Day> days);
         void showDayUi(Day day);
         void showError(String message);
-        void showMealUi(Meal meal);
     }
 
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainDays();
         abstract void onDayClick(Day day);
-        abstract void onAddMealClick();
     }
 }

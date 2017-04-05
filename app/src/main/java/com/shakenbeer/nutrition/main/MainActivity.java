@@ -5,13 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import com.shakenbeer.nutrition.R;
+import com.shakenbeer.nutrition.calendar.CalendarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
 
-    private TextView mTextMessage;
+    private MainContainer container;
+
+    private MainContract.Presenter presenter;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -20,16 +23,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_calendar:
-                    mTextMessage.setText(R.string.calendar);
+                    presenter.onCalendarClick();
                     return true;
                 case R.id.navigation_food_list:
-                    mTextMessage.setText(R.string.food_list);
+                    presenter.onFoodListClick();
                     return true;
                 case R.id.navigation_statistics:
-                    mTextMessage.setText(R.string.statistics);
+                    presenter.onStatisticClick();
                     return true;
                 case R.id.navigation_settings:
-                    mTextMessage.setText(R.string.settings);
+                    presenter.onSettingsClick();
                     return true;
             }
             return false;
@@ -42,9 +45,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
+        presenter = new MainPresenter();
+        presenter.attachView(this);
+
+        container = (MainContainer) findViewById(R.id.content);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        showCalendarUi();
     }
 
+    @Override
+    public void showCalendarUi() {
+        container.replace(new CalendarView(this));
+    }
+
+    @Override
+    public void showFoodListUi() {
+        container.replace(new CalendarView(this));
+    }
+
+    @Override
+    public void showStatisticUi() {
+
+    }
+
+    @Override
+    public void showSettingsUi() {
+
+    }
+
+    @Override
+    public void showNewMealUi() {
+
+    }
+
+    private void clearContent() {
+        if (container.getChildAt(0) != null) {
+            container.removeViewAt(0);
+        }
+    }
 }

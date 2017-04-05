@@ -1,13 +1,7 @@
 package com.shakenbeer.nutrition;
 
-import java.util.Locale;
-
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 
 import com.shakenbeer.nutrition.injection.ApplicationComponent;
 import com.shakenbeer.nutrition.injection.ApplicationModule;
@@ -28,5 +22,9 @@ public class CarbculatorApplication extends Application {
                     .build();
         }
         return applicationComponent;
+    }
+
+    public static CarbculatorApplication get(Context context) {
+        return (CarbculatorApplication) context.getApplicationContext();
     }
 }
