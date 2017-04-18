@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
+import com.shakenbeer.nutrition.day.DayActivity;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
@@ -81,7 +82,7 @@ public class CalendarView extends RecyclerView implements CalendarContract.View 
 
     @Override
     public void showDayUi(Day day) {
-
+        DayActivity.start(getContext(), day);
     }
 
     @Override

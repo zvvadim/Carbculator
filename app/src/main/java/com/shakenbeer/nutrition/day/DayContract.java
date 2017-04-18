@@ -16,7 +16,7 @@ public interface DayContract {
         void showMeals(List<Meal> meals);
         void showMealUi(Meal meal);
         void showError(String message);
-        void showPreviusUi();
+        void showPreviousUi();
     }
 
     abstract class Presenter extends BasePresenter<View> {

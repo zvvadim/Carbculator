@@ -26,6 +26,7 @@ public class DayPresenter extends DayContract.Presenter {
 
     @Override
     void obtainMeals(Day day) {
+        getMvpView().showDay(day);
         nutritionLab2.getMealsRx(day)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
