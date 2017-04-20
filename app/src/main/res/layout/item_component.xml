@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="position"
+            type="int" />
+
+        <variable
+            name="component"
+            type="com.shakenbeer.nutrition.model.Component" />
+
+        <variable
+            name="itemListener"
+            type="com.shakenbeer.nutrition.util.ui.ItemListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_activated"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_activated"
+            android:baselineAligned="false"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/component_button"
+                style="@style/Widget.AppCompat.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{component.foodName ?? @string/select_food}"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="@string/select_food" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/component_grams_edit_text"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/ingredient_grams"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:text="@{component.grams}" />
+
+                <TextView
+                    android:id="@+id/component_unit_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{component.foodUnitName}"
+                    tools:text="@string/grams" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/delete_component"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/delete_food"
+            android:onClick="@{() -> itemListener.onDelete(position)}"
+            android:src="@android:drawable/ic_menu_delete" />
+
+    </LinearLayout>
+</layout>

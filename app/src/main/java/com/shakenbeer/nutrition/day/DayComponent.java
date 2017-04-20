@@ -6,7 +6,7 @@ import com.shakenbeer.nutrition.injection.FeatureScope;
 import dagger.Component;
 
 @FeatureScope
-@Component(dependencies = ApplicationComponent.class)
+@Component(dependencies = ApplicationComponent.class, modules = DayModule.class)
 public interface DayComponent {
     void inject(DayActivity dayActivity);
 }

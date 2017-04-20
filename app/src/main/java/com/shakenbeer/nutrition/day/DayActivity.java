@@ -27,7 +27,7 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     private static final String DAY_EXTRA = "com.shakenbeer.nutrition.day.dayExtra";
 
     @Inject
-    DayPresenter presenter;
+    DayContract.Presenter presenter;
     @Inject
     MealAdapter adapter;
     private ActivityDayBinding binding;
@@ -50,6 +50,7 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     private void injectDependencies() {
         DaggerDayComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(this).getComponent())
+                .dayModule(new DayModule())
                 .build()
                 .inject(this);
     }

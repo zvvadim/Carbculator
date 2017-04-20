@@ -74,7 +74,7 @@ public class Meal implements Parcelable {
     }
     
     public Meal(Date date) {
-        id = -1;
+        this();
         this.date = date;
     }
 

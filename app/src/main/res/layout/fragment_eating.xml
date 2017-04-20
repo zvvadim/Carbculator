@@ -36,14 +36,14 @@
 
         <Button
             android:id="@+id/eating_date_button"
-            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
             android:id="@+id/eating_time_button"
-            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            style="@style/Widget.AppCompat.Spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

@@ -13,6 +13,7 @@ public class Component {
 
     public Component() {
         id = -1;
+        foodName = null;
     }
 
     @Override

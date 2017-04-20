@@ -13,6 +13,7 @@ import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -78,6 +79,15 @@ public class CalendarView extends RecyclerView implements CalendarContract.View 
     @Override
     public void showDays(List<Day> days) {
         adapter.addItems(days);
+        showTodayIfNoData();
+    }
+
+    private void showTodayIfNoData() {
+        if (adapter.getItemCount() == 0) {
+            Day day = new Day();
+            day.setDate(new Date());
+            adapter.addItem(day);
+        }
     }
 
     @Override
