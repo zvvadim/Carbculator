@@ -53,7 +53,7 @@
                     android:hint="@string/ingredient_grams"
                     android:inputType="number"
                     android:maxLength="8"
-                    android:text="@{component.grams}" />
+                    android:text="@{String.valueOf(component.grams)}" />
 
                 <TextView
                     android:id="@+id/component_unit_name_text_view"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/delete_food"
-            android:onClick="@{() -> itemListener.onDelete(position)}"
+            android:onClick="@{() -> itemListener.onAction(position)}"
             android:src="@android:drawable/ic_menu_delete" />
 
     </LinearLayout>

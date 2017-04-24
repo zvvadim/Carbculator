@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shakenbeer.nutrition.model.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,10 @@ public abstract class BindingAdapter<I> extends RecyclerView.Adapter<BindingView
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public I getItem(int position) {
+        return items.get(position);
     }
 
     public void setItems(List<I> items) {

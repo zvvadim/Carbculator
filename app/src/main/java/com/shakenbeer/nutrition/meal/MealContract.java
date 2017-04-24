@@ -23,8 +23,8 @@ public interface MealContract {
 
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainComponents(Meal meal);
-        abstract void onAddComponentClick();
-        abstract void onRemoveComponentClick(Component component, int index);
+        abstract void onAddComponent();
+        abstract void onRemoveComponent(Component component, int index);
         abstract void onSaveClick();
         abstract void onMealTypeSelected(int type);
         abstract void onMealDateSelected(int year, int monthOfYear, int dayOfMonth);

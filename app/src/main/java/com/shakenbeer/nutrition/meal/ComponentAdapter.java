@@ -25,7 +25,7 @@ public class ComponentAdapter extends BindingAdapter<Component> {
     @Override
     protected ViewDataBinding bind(LayoutInflater inflater, ViewGroup parent, int viewType) {
         ItemComponentBinding binding = ItemComponentBinding.inflate(inflater, parent, false);
-        binding.setDeleteListener(deleteListener);
+        binding.setItemListener(deleteListener);
         return binding;
     }
 

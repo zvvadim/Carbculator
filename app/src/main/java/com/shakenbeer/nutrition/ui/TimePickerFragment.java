@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * @author Sviatoslav Melnychenko
@@ -17,7 +18,7 @@ public class TimePickerFragment extends DialogFragment {
     private OnTimeSetListener listener;
     private Date initDate;
 
-    public static TimePickerFragment newInstance(OnTimeSetListener listener, Date date) {
+    public static TimePickerFragment newInstance(@NonNull OnTimeSetListener listener, Date date) {
         TimePickerFragment fragment = new TimePickerFragment();
         fragment.setListener(listener);
         fragment.setInitDate(date);

@@ -10,13 +10,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.databinding.ActivityDayBinding;
+import com.shakenbeer.nutrition.meal.MealActivity;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Meal;
+import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 
 import java.util.List;
 
@@ -47,6 +50,19 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
         initPresenter();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Day day = getIntent().getParcelableExtra(DAY_EXTRA);
+        presenter.obtainMeals(day);
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
+    }
+
     private void injectDependencies() {
         DaggerDayComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(this).getComponent())
@@ -62,12 +78,16 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
         binding.mealsRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this, layoutManager.getOrientation()));
         binding.mealsRecyclerView.setAdapter(adapter);
+        adapter.setItemClickListener(new BindingAdapter.ItemClickListener<Meal>() {
+            @Override
+            public void onClick(Meal item, int position, View... shared) {
+                presenter.onMealClick(item);
+            }
+        });
     }
 
     private void initPresenter() {
         presenter.attachView(this);
-        Day day = getIntent().getParcelableExtra(DAY_EXTRA);
-        presenter.obtainMeals(day);
     }
 
     @Override
@@ -78,7 +98,7 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_eating_menu_item) {
+        if (item.getItemId() == R.id.add) {
             presenter.onAddMealClick();
             return true;
         }
@@ -98,12 +118,12 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
 
     @Override
     public void showMeals(List<Meal> meals) {
-        adapter.addItems(meals);
+        adapter.setItems(meals);
     }
 
     @Override
     public void showMealUi(Meal meal) {
-
+        MealActivity.start(this, meal);
     }
 
     @Override

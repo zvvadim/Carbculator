@@ -8,6 +8,7 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 /**
  * @author Sviatoslav Melnychenko
@@ -18,7 +19,7 @@ public class DatePickerFragment extends DialogFragment {
     private OnDateSetListener listener;
     private Date initDate;
 
-    public static DatePickerFragment newInstance(OnDateSetListener listener,
+    public static DatePickerFragment newInstance(@NonNull OnDateSetListener listener,
             Date date) {
 
         DatePickerFragment fragment = new DatePickerFragment();
@@ -26,7 +27,7 @@ public class DatePickerFragment extends DialogFragment {
         fragment.setInitDate(date);
         return fragment;
 
-    }    
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

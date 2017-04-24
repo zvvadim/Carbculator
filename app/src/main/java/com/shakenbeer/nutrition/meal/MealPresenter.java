@@ -33,6 +33,8 @@ public class MealPresenter extends MealContract.Presenter {
 
     @Override
     void obtainComponents(Meal meal) {
+        this.meal = meal;
+        getMvpView().showMeal(meal);
         nutritionLab2.getComponentsRx(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -51,14 +53,14 @@ public class MealPresenter extends MealContract.Presenter {
     }
 
     @Override
-    void onAddComponentClick() {
+    void onAddComponent() {
         Component component = new Component();
         components.add(component);
         getMvpView().showNewComponent(component);
     }
 
     @Override
-    void onRemoveComponentClick(Component component, int index) {
+    void onRemoveComponent(Component component, int index) {
         if (component.getId() > 0) {
             toDelete.add(component);
         }
@@ -116,6 +118,7 @@ public class MealPresenter extends MealContract.Presenter {
 
         calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
         meal.setDate(calendar.getTime());
+        getMvpView().showMeal(meal);
     }
 
     @Override
@@ -128,6 +131,7 @@ public class MealPresenter extends MealContract.Presenter {
 
         calendar = new GregorianCalendar(year, month, day, hour, minutes);
         meal.setDate(calendar.getTime());
+        getMvpView().showMeal(meal);
     }
 
     @Override

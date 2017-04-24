@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.shakenbeer.nutrition.util.TextUtils" />
+
         <variable
             name="meal"
-            type="com.shakenbeer.nutrition.model.Meal"/>
+            type="com.shakenbeer.nutrition.model.Meal" />
     </data>
 
 
@@ -24,11 +27,11 @@
             android:background="@color/eating_caption_background"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_tiny"
-            tools:text="@string/new_eating"
             android:text="@{meal.id > -1 ? @stringArray/eating_names[meal.number] : @string/new_eating}"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="@string/new_eating" />
 
         <Spinner
             android:id="@+id/eating_name_spinner"
@@ -50,14 +53,16 @@
                 style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@{TextUtils.shortDate(meal.getDate())}" />
 
             <Button
                 android:id="@+id/eating_time_button"
                 style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@{TextUtils.shortTime(meal.getDate())}" />
         </LinearLayout>
 
         <View
