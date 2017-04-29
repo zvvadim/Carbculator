@@ -22,23 +22,56 @@ import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.databinding.ActivityMealBinding;
 import com.shakenbeer.nutrition.model.Component;
+import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
-import com.shakenbeer.nutrition.util.ui.ItemListener;
 
 import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class MealActivity extends AppCompatActivity implements MealContract.View, ItemListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class MealActivity extends AppCompatActivity implements MealContract.View {
 
     public static final String MEAL_EXTRA = "com.shakenbeer.nutrition.meal.mealExtra";
+
     @Inject
     ComponentAdapter adapter;
     @Inject
     MealContract.Presenter presenter;
     private ActivityMealBinding binding;
+
+    private ComponentListener componentListener = new ComponentListener() {
+        @Override
+        public void onDelete(int position) {
+            presenter.onRemoveComponent(adapter.getItem(position), position);
+        }
+
+        @Override
+        public void onSelectFood(int position) {
+            showFoodChooser(position);
+        }
+
+        @Override
+        public void onAmountChanged(int position, String text) {
+            int amount = text.isEmpty() ? 0 : Integer.parseInt(text);
+            presenter.onComponentAmountChanged(adapter.getItem(position), amount);
+        }
+    };
+
+    private DatePickerDialog.OnDateSetListener dateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    presenter.onMealDateSelected(year, month, dayOfMonth);
+                }
+            };
+    private TimePickerDialog.OnTimeSetListener timeSetListener =
+            new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    presenter.onMealTimeSelected(hourOfDay, minute);
+                }
+            };
 
     public static void start(Context context, Meal meal) {
         Intent starter = new Intent(context, MealActivity.class);
@@ -64,7 +97,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     private void injectDependencies() {
         DaggerMealComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(this).getComponent())
-                .mealModule(new MealModule(this))
+                .mealModule(new MealModule(componentListener))
                 .build()
                 .inject(this);
     }
@@ -122,7 +155,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog dialog = new DatePickerDialog(this, this, year, month, day);
+        DatePickerDialog dialog = new DatePickerDialog(this, dateSetListener, year, month, day);
         dialog.show();
     }
 
@@ -131,7 +164,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         calendar.setTime(binding.getMeal().getDate());
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        TimePickerDialog dialog = new TimePickerDialog(this, this, hourOfDay,minute,true);
+        TimePickerDialog dialog = new TimePickerDialog(this, timeSetListener, hourOfDay, minute, true);
         dialog.show();
     }
 
@@ -156,9 +189,17 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onAction(int position) {
-        presenter.onRemoveComponent(adapter.getItem(position), position);
+    private void showFoodChooser(final int position) {
+        FoodChooserDialog.newInstance(new FoodChooserDialog.Callbacks() {
+            @Override
+            public void onItemSelected(Food food) {
+                presenter.onComponentFoodSelected(adapter.getItem(position), food);
+                //TODO works because on synchronous calls
+                //should be called from presenter
+                //consider to refactor contract using indexes
+                adapter.notifyItemChanged(position);
+            }
+        }).show(getSupportFragmentManager(), null);
     }
 
     @Override
@@ -193,13 +234,4 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         onBackPressed();
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        presenter.onMealDateSelected(year, month, dayOfMonth);
-    }
-
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        presenter.onMealTimeSelected(hourOfDay, minute);
-    }
 }

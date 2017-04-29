@@ -13,8 +13,8 @@
             type="com.shakenbeer.nutrition.model.Component" />
 
         <variable
-            name="itemListener"
-            type="com.shakenbeer.nutrition.util.ui.ItemListener" />
+            name="listener"
+            type="com.shakenbeer.nutrition.meal.ComponentListener" />
     </data>
 
     <LinearLayout
@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{component.foodName ?? @string/select_food}"
                 android:textSize="@dimen/text_size_medium"
+                android:onClick="@{() -> listener.onSelectFood(position)}"
                 tools:text="@string/select_food" />
 
             <LinearLayout
@@ -53,7 +54,8 @@
                     android:hint="@string/ingredient_grams"
                     android:inputType="number"
                     android:maxLength="8"
-                    android:text="@{String.valueOf(component.grams)}" />
+                    android:text="@{String.valueOf(component.grams)}"
+                    android:onTextChanged="@{(s, start, before, count) -> listener.onAmountChanged(position, s.toString())}"/>
 
                 <TextView
                     android:id="@+id/component_unit_name_text_view"
@@ -71,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/delete_food"
-            android:onClick="@{() -> itemListener.onAction(position)}"
+            android:onClick="@{() -> listener.onDelete(position)}"
             android:src="@android:drawable/ic_menu_delete" />
 
     </LinearLayout>

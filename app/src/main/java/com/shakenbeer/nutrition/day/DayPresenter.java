@@ -25,7 +25,8 @@ public class DayPresenter extends DayContract.Presenter {
     }
 
     @Override
-    void obtainMeals(Day day) {
+    void obtainMeals(final Day day) {
+        //Removing this line causes NPE in binding time
         getMvpView().showDay(day);
         nutritionLab2.getMealsRx(day)
                 .subscribeOn(Schedulers.io())
@@ -34,6 +35,7 @@ public class DayPresenter extends DayContract.Presenter {
                     @Override
                     public void accept(@NonNull List<Meal> meals) throws Exception {
                         getMvpView().showMeals(meals);
+                        getMvpView().showDay(dayFromMeals(day, meals));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -42,6 +44,27 @@ public class DayPresenter extends DayContract.Presenter {
                     }
                 });
 
+    }
+
+    private Day dayFromMeals(Day day, List<Meal> meals) {
+        Day result = new Day();
+        result.setDate(day.getDate());
+        float protein = 0;
+        float fat = 0;
+        float carbs = 0;
+        float kcal = 0;
+        for (int i = 0; i < meals.size(); i++) {
+            Meal meal = meals.get(i);
+            protein += meal.getProtein();
+            fat += meal.getFat();
+            carbs += meal.getCarbs();
+            kcal += meal.getKcal();
+        }
+        result.setProtein(protein);
+        result.setFat(fat);
+        result.setCarbs(carbs);
+        result.setKcal(kcal);
+        return result;
     }
 
     @Override

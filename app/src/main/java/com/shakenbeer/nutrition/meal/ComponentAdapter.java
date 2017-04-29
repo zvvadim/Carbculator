@@ -8,24 +8,23 @@ import com.shakenbeer.nutrition.databinding.ItemComponentBinding;
 import com.shakenbeer.nutrition.model.Component;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.BindingViewHolder;
-import com.shakenbeer.nutrition.util.ui.ItemListener;
 
 import javax.inject.Inject;
 
 
 public class ComponentAdapter extends BindingAdapter<Component> {
 
-    private final ItemListener deleteListener;
+    private final ComponentListener deleteListener;
 
     @Inject
-    public ComponentAdapter(ItemListener deleteListener) {
+    public ComponentAdapter(ComponentListener deleteListener) {
         this.deleteListener = deleteListener;
     }
 
     @Override
     protected ViewDataBinding bind(LayoutInflater inflater, ViewGroup parent, int viewType) {
         ItemComponentBinding binding = ItemComponentBinding.inflate(inflater, parent, false);
-        binding.setItemListener(deleteListener);
+        binding.setListener(deleteListener);
         return binding;
     }
 

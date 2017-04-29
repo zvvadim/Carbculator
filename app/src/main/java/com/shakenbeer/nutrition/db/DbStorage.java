@@ -256,7 +256,9 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
     @Override
     public Cursor queryFoods(int page, int offset) {
-        return null;
+        Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, null, FoodTable.COLUMN_DELETED + " = 0",
+                null, null, null, FoodTable.COLUMN_NAME, page * offset + "," + offset);
+        return cursor;
     }
 
     @Override
