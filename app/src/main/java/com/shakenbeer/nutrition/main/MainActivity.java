@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.calendar.CalendarView;
@@ -29,10 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     presenter.onFoodListClick();
                     return true;
                 case R.id.navigation_statistics:
-                    presenter.onStatisticClick();
-                    return true;
-                case R.id.navigation_settings:
-                    presenter.onSettingsClick();
+                    presenter.onStatisticsClick();
                     return true;
             }
             return false;
@@ -52,7 +48,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        showCalendarUi();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.onShow();
     }
 
     @Override

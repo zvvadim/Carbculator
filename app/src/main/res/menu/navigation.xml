@@ -16,10 +16,4 @@
         android:icon="@drawable/numeric_3_box"
         android:title="@string/statistics" />
 
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/numeric_4_box"
-        android:title="@string/settings" />
-
-
 </menu>

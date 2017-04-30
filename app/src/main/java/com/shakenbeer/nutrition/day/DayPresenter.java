@@ -5,6 +5,7 @@ import com.shakenbeer.nutrition.data.NutritionLab2;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Meal;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,19 +16,21 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class DayPresenter extends DayContract.Presenter {
+class DayPresenter extends DayContract.Presenter {
 
     private final NutritionLab2 nutritionLab2;
+    private Day day;
 
     @Inject
-    public DayPresenter(NutritionLab2 nutritionLab2) {
+    DayPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 
     @Override
-    void obtainMeals(final Day day) {
+    void obtainMeals(Day day) {
         //Removing this line causes NPE in binding time
         getMvpView().showDay(day);
+        this.day = day;
         nutritionLab2.getMealsRx(day)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -35,7 +38,7 @@ public class DayPresenter extends DayContract.Presenter {
                     @Override
                     public void accept(@NonNull List<Meal> meals) throws Exception {
                         getMvpView().showMeals(meals);
-                        getMvpView().showDay(dayFromMeals(day, meals));
+                        getMvpView().showDay(dayFromMeals(DayPresenter.this.day, meals));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -74,6 +77,16 @@ public class DayPresenter extends DayContract.Presenter {
 
     @Override
     void onAddMealClick() {
+        Calendar target = mergeDateTime();
+        getMvpView().showMealUi(new Meal(target.getTime()));
+    }
 
+    private Calendar mergeDateTime() {
+        Calendar current = Calendar.getInstance();
+        Calendar target = Calendar.getInstance();
+        target.setTime(day.getDate());
+        target.set(Calendar.HOUR_OF_DAY, current.get(Calendar.HOUR_OF_DAY));
+        target.set(Calendar.MINUTE, current.get(Calendar.MINUTE));
+        return target;
     }
 }

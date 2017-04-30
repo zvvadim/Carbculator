@@ -1,34 +1,58 @@
 package com.shakenbeer.nutrition.main;
 
 
-public class MainPresenter extends MainContract.Presenter {
+class MainPresenter extends MainContract.Presenter {
+
+    private static final int CALENDAR = 1;
+    private static final int FOOD_LIST = 2;
+    private static final int STATISTICS = 3;
+    private static final int SETTINGS = 4;
+
+    private int currentPage = CALENDAR;
+
+
+    @Override
+    void onShow() {
+        switch (currentPage) {
+            case CALENDAR:
+                getMvpView().showCalendarUi();
+                break;
+            case FOOD_LIST:
+                getMvpView().showFoodListUi();
+                break;
+            case STATISTICS:
+                getMvpView().showStatisticUi();
+                break;
+            case SETTINGS:
+                getMvpView().showStatisticUi();
+                break;
+            default:
+                getMvpView().showCalendarUi();
+        }
+    }
 
     @Override
     void onCalendarClick() {
-        if (isViewAttached()) {
-            getMvpView().showCalendarUi();
-        }
+        getMvpView().showCalendarUi();
+        currentPage = CALENDAR;
     }
 
     @Override
     void onFoodListClick() {
-        if (isViewAttached()) {
-            getMvpView().showFoodListUi();
-        }
+        getMvpView().showFoodListUi();
+        currentPage = FOOD_LIST;
     }
 
     @Override
-    void onStatisticClick() {
-        if (isViewAttached()) {
-            getMvpView().showStatisticUi();
-        }
+    void onStatisticsClick() {
+        getMvpView().showStatisticUi();
+        currentPage = STATISTICS;
     }
 
     @Override
     void onSettingsClick() {
-        if (isViewAttached()) {
-            getMvpView().showSettingsUi();
-        }
+        getMvpView().showSettingsUi();
+        currentPage = SETTINGS;
     }
 
     @Override

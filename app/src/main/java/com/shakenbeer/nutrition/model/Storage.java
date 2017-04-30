@@ -45,7 +45,6 @@ public interface Storage {
 
     void deleteEating(Meal meal);
 
-
     Cursor queryDays(int page, int offset);
 
     Cursor queryFoods(int page, int offset);

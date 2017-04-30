@@ -4,7 +4,7 @@ package com.shakenbeer.nutrition.main;
 import com.shakenbeer.nutrition.presentation.BasePresenter;
 import com.shakenbeer.nutrition.presentation.MvpView;
 
-public interface MainContract {
+interface MainContract {
     interface View extends MvpView {
         void showCalendarUi();
         void showFoodListUi();
@@ -14,9 +14,10 @@ public interface MainContract {
     }
 
     abstract class Presenter extends BasePresenter<View> {
+        abstract void onShow();
         abstract void onCalendarClick();
         abstract void onFoodListClick();
-        abstract void onStatisticClick();
+        abstract void onStatisticsClick();
         abstract void onSettingsClick();
         abstract void onAddMealClick();
     }
