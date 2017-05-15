@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.calendar.CalendarView;
+import com.shakenbeer.nutrition.foodlist.FoodListView;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void showFoodListUi() {
-        container.replace(new CalendarView(this));
+        container.replace(new FoodListView(this));
     }
 
     @Override

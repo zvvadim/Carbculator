@@ -14,17 +14,17 @@ import javax.inject.Inject;
 
 public class ComponentAdapter extends BindingAdapter<Component> {
 
-    private final ComponentListener deleteListener;
+    private final ComponentListener componentListener;
 
     @Inject
-    public ComponentAdapter(ComponentListener deleteListener) {
-        this.deleteListener = deleteListener;
+    public ComponentAdapter(ComponentListener componentListener) {
+        this.componentListener = componentListener;
     }
 
     @Override
     protected ViewDataBinding bind(LayoutInflater inflater, ViewGroup parent, int viewType) {
         ItemComponentBinding binding = ItemComponentBinding.inflate(inflater, parent, false);
-        binding.setListener(deleteListener);
+        binding.setListener(componentListener);
         return binding;
     }
 

@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
@@ -151,6 +152,15 @@ public class NutritionLab2 {
             storage.updateFood(food);
             return food.getId();
         }
+    }
+
+    public Completable deleteFoodRx(final Food food) {
+        return Completable.fromRunnable(new Runnable() {
+            @Override
+            public void run() {
+                storage.updateMarkDeleted(food);
+            }
+        });
     }
 
     public void deleteFood(Food food) {
