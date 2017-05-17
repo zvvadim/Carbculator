@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.day.DayActivity;
+import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.Day;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
 
@@ -18,7 +20,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CalendarView extends RecyclerView implements CalendarContract.View {
+public class CalendarView extends RecyclerView implements CalendarContract.View,
+        MainActivity.Callbacks {
 
     @Inject
     CalendarContract.Presenter presenter;
@@ -98,5 +101,19 @@ public class CalendarView extends RecyclerView implements CalendarContract.View 
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showDayUpdated(Day day, int position, boolean existing) {
+        if (existing) {
+            adapter.replaceItem(day, position);
+        } else {
+            adapter.addItem(day, position);
+        }
+    }
+
+    @Override
+    public void onNewMeal(Meal meal) {
+        presenter.onDayGrow(meal, adapter.getItems());
     }
 }

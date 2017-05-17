@@ -1,5 +1,6 @@
 package com.shakenbeer.nutrition.meal;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -77,6 +78,12 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         Intent starter = new Intent(context, MealActivity.class);
         starter.putExtra(MEAL_EXTRA, meal);
         context.startActivity(starter);
+    }
+
+    public static void startForResult(Activity activity, Meal meal, int requestCode) {
+        Intent starter = new Intent(activity, MealActivity.class);
+        starter.putExtra(MEAL_EXTRA, meal);
+        activity.startActivityForResult(starter, requestCode);
     }
 
     @Override
@@ -230,7 +237,12 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     }
 
     @Override
-    public void showPreviousUi() {
+    public void showPreviousUi(Meal meal, boolean changed) {
+        if (changed) {
+            Intent data = new Intent();
+            data.putExtra(MEAL_EXTRA, meal);
+            setResult(RESULT_OK, data);
+        }
         onBackPressed();
     }
 

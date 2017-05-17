@@ -33,8 +33,8 @@ public class MealPresenter extends MealContract.Presenter {
 
     @Override
     void obtainComponents(Meal meal) {
-        this.meal = meal;
         getMvpView().showMeal(meal);
+        this.meal = meal;
         nutritionLab2.getComponentsRx(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,7 +85,7 @@ public class MealPresenter extends MealContract.Presenter {
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        getMvpView().showPreviousUi();
+                        getMvpView().showPreviousUi(meal, true);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

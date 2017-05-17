@@ -28,7 +28,6 @@ class DayPresenter extends DayContract.Presenter {
 
     @Override
     void obtainMeals(Day day) {
-        //Removing this line causes NPE in binding time
         getMvpView().showDay(day);
         this.day = day;
         nutritionLab2.getMealsRx(day)

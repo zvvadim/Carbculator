@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.shakenbeer.nutrition.util.TextUtils" />
+        <import type="com.shakenbeer.nutrition.util.DateUtils" />
 
         <variable
             name="meal"

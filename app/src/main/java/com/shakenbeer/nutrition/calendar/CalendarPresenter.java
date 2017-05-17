@@ -3,7 +3,10 @@ package com.shakenbeer.nutrition.calendar;
 
 import com.shakenbeer.nutrition.data.NutritionLab2;
 import com.shakenbeer.nutrition.model.Day;
+import com.shakenbeer.nutrition.model.Meal;
+import com.shakenbeer.nutrition.util.DateUtils;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,4 +63,30 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     void onDayClick(Day day) {
         getMvpView().showDayUi(day);
     }
+
+    @Override
+    void onDayGrow(Meal meal, List<Day> days) {
+        Date date = meal.getDate();
+        for (int i = 0; i < days.size(); i++) {
+            Day day = days.get(i);
+            if (DateUtils.sameDay(date, day.getDate())) {
+                growDay(day, meal);
+                getMvpView().showDayUpdated(day, i, true);
+                return;
+            }
+        }
+    }
+
+    private void growDay(Day day, Meal meal) {
+        float protein = day.getProtein() + meal.getProtein();
+        float fat = day.getFat() + meal.getFat();
+        float carbs = day.getCarbs() + meal.getCarbs();
+        float kcal = day.getKcal() + meal.getKcal();
+        day.setProtein(protein);
+        day.setFat(fat);
+        day.setCarbs(carbs);
+        day.setKcal(kcal);
+    }
+
+
 }

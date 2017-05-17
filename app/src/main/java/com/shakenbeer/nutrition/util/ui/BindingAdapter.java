@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.shakenbeer.nutrition.model.Component;
+import com.shakenbeer.nutrition.model.Day;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,10 @@ public abstract class BindingAdapter<I> extends RecyclerView.Adapter<BindingView
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public List<I> getItems() {
+        return items;
     }
 
     public I getItem(int position) {
@@ -69,6 +74,11 @@ public abstract class BindingAdapter<I> extends RecyclerView.Adapter<BindingView
     public void removeItem(int position) {
         items.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void replaceItem(I item, int position) {
+        items.set(position, item);
+        notifyItemChanged(position);
     }
 
     public void clear() {
