@@ -145,6 +145,15 @@ public class NutritionLab2 {
         return list;
     }
 
+    public Single<Long> saveFoodRx(final Food food) {
+        return Single.fromCallable(new Callable<Long>() {
+            @Override
+            public Long call() throws Exception {
+                return saveFood(food);
+            }
+        });
+    }
+
     public long saveFood(Food food) {
         if (food.getId() < 0) {
             return storage.insertFood(food);

@@ -28,7 +28,7 @@
             android:background="@color/day_caption_background"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_tiny"
-            android:text='@{day.date != null ? TextUtils.longDate(day.date) : ""}'
+            android:text='@{day.date != null ? DateUtils.longDate(day.date) : ""}'
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"

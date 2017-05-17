@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{TextUtils.shortDate(meal.getDate())}" />
+                android:text="@{DateUtils.shortDate(meal.getDate())}" />
 
             <Button
                 android:id="@+id/eating_time_button"
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{TextUtils.shortTime(meal.getDate())}" />
+                android:text="@{DateUtils.shortTime(meal.getDate())}" />
         </LinearLayout>
 
         <View

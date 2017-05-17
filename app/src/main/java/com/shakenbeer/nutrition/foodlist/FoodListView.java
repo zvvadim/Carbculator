@@ -78,8 +78,9 @@ public class FoodListView extends RecyclerView implements FoodListContract.View 
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         presenter.detachView();
+        super.onDetachedFromWindow();
+
     }
 
     @Override

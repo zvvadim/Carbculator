@@ -75,8 +75,8 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         presenter.detachView();
+        super.onDetachedFromWindow();
     }
 
     @Override

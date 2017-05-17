@@ -110,6 +110,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     }
 
     private void initUi() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         binding.componentsRecyclerView.setLayoutManager(layoutManager);
         binding.componentsRecyclerView.
@@ -179,6 +180,12 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         presenter.attachView(this);
         Meal meal = getIntent().getParcelableExtra(MEAL_EXTRA);
         presenter.obtainComponents(meal);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
