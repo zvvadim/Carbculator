@@ -234,4 +234,18 @@ public class NutritionLab2 {
         eatingCursor.close();
     }
 
+    public Single<Meal> getMealRx(final long mealId) {
+        return Single.fromCallable(new Callable<Meal>() {
+            @Override
+            public Meal call() throws Exception {
+                Cursor cursor = storage.queryMeal(mealId);
+                DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
+                if (eatingCursor.moveToFirst()) {
+                    return eatingCursor.get();
+                } else {
+                    return new Meal();
+                }
+            }
+        });
+    }
 }

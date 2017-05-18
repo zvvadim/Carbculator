@@ -13,6 +13,7 @@ import java.util.List;
 public interface CalendarContract {
 
     interface View extends MvpView {
+        void clear();
         void showDays(List<Day> days);
         void showDayUi(Day day);
         void showError(String message);
@@ -22,6 +23,6 @@ public interface CalendarContract {
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainDays();
         abstract void onDayClick(Day day);
-        abstract void onDayGrow(Meal meal, List<Day> days);
+        abstract void onDayGrow(long mealId, List<Day> days);
     }
 }

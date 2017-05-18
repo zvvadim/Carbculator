@@ -84,4 +84,9 @@ public class FoodListPresenter extends FoodListContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    void onNewFood(long foodId) {
+
+    }
 }

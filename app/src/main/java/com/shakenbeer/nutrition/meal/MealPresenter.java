@@ -80,12 +80,11 @@ public class MealPresenter extends MealContract.Presenter {
                         saveComponents(mealId);
                     }
                 })
-                .toCompletable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void run() throws Exception {
-                        getMvpView().showPreviousUi(meal, true);
+                    public void accept(@NonNull Long mealId) throws Exception {
+                        getMvpView().showPreviousUi(mealId, true);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

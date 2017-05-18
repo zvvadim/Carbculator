@@ -34,6 +34,7 @@ import javax.inject.Inject;
 public class MealActivity extends AppCompatActivity implements MealContract.View {
 
     public static final String MEAL_EXTRA = "com.shakenbeer.nutrition.meal.mealExtra";
+    public static final String MEAL_ID_EXTRA = "com.shakenbeer.nutrition.meal.mealIdExtra";
 
     @Inject
     ComponentAdapter adapter;
@@ -244,10 +245,10 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     }
 
     @Override
-    public void showPreviousUi(Meal meal, boolean changed) {
+    public void showPreviousUi(long mealId, boolean changed) {
         if (changed) {
             Intent data = new Intent();
-            data.putExtra(MEAL_EXTRA, meal);
+            data.putExtra(MEAL_ID_EXTRA, mealId);
             setResult(RESULT_OK, data);
         }
         onBackPressed();

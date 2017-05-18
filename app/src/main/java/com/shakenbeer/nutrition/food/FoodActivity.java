@@ -1,5 +1,6 @@
 package com.shakenbeer.nutrition.food;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -18,12 +19,19 @@ import javax.inject.Inject;
 
 public class FoodActivity extends AppCompatActivity implements FoodContract.View, FoodListener {
 
-    private static final String FOOD_EXTRA = "com.shakenbeer.nutrition.food.foodExtra";
+    public static final String FOOD_EXTRA = "com.shakenbeer.nutrition.food.foodExtra";
+    public static final String FOOD_ID_EXTRA = "com.shakenbeer.nutrition.food.foodIdExtra";
 
     public static void start(Context context, Food food) {
         Intent starter = new Intent(context, FoodActivity.class);
         starter.putExtra(FOOD_EXTRA, food);
         context.startActivity(starter);
+    }
+
+    public static void startForResult(Activity activity, Food food, int requestCode) {
+        Intent starter = new Intent(activity, FoodActivity.class);
+        starter.putExtra(FOOD_EXTRA, food);
+        activity.startActivityForResult(starter, requestCode);
     }
 
     @Inject
@@ -86,7 +94,10 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
     }
 
     @Override
-    public void showPreviousUi() {
+    public void showPreviousUi(long foodId) {
+        Intent data = new Intent();
+        data.putExtra(FOOD_ID_EXTRA, foodId);
+        setResult(RESULT_OK, data);
         onBackPressed();
     }
 
@@ -113,17 +124,17 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
 
     @Override
     public void onFatChanged(CharSequence value) {
-        presenter.onFatChanged(Float.parseFloat(value.toString()));
+        presenter.onFatChanged(parseFloat(value));
     }
 
     @Override
     public void onCarbsChanged(CharSequence value) {
-        presenter.onCarbsChanged(Float.parseFloat(value.toString()));
+        presenter.onCarbsChanged(parseFloat(value));
     }
 
     @Override
     public void onKcalChanged(CharSequence value) {
-        presenter.onKcalChanged(Float.parseFloat(value.toString()));
+        presenter.onKcalChanged(parseFloat(value));
     }
 
     private float parseFloat(CharSequence value) {

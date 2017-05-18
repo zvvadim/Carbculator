@@ -66,8 +66,8 @@ public class FoodPresenter extends FoodContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
-                    public void accept(@NonNull Long aLong) throws Exception {
-                        getMvpView().showPreviousUi();
+                    public void accept(@NonNull Long foodId) throws Exception {
+                        getMvpView().showPreviousUi(foodId);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -48,4 +48,6 @@ public interface Storage {
     Cursor queryDays(int page, int offset);
 
     Cursor queryFoods(int page, int offset);
+
+    Cursor queryMeal(long id);
 }

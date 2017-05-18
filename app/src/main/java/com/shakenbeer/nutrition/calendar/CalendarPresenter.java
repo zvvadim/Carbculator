@@ -48,6 +48,9 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     }
 
     private void process(@NonNull List<Day> days) {
+        if (page == 0) {
+            getMvpView().clear();
+        }
         page++;
         getMvpView().showDays(days);
         if (days.size() < OFFSET) {
@@ -65,7 +68,19 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     }
 
     @Override
-    void onDayGrow(Meal meal, List<Day> days) {
+    void onDayGrow(long mealId, final List<Day> days) {
+        nutritionLab2.getMealRx(mealId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Meal>() {
+                    @Override
+                    public void accept(@NonNull Meal meal) throws Exception {
+                        processNewMeal(meal, days);
+                    }
+                });
+    }
+
+    private void processNewMeal(@NonNull Meal meal, List<Day> days) {
         Date date = meal.getDate();
         for (int i = 0; i < days.size(); i++) {
             Day day = days.get(i);
@@ -75,6 +90,13 @@ public class CalendarPresenter extends CalendarContract.Presenter {
                 return;
             }
         }
+        refresh();
+    }
+
+    private void refresh() {
+        page = 0;
+        everythingIsHere = false;
+        obtainDays();
     }
 
     private void growDay(Day day, Meal meal) {

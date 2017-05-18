@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.calendar.CalendarView;
+import com.shakenbeer.nutrition.food.FoodActivity;
 import com.shakenbeer.nutrition.foodlist.FoodListView;
 import com.shakenbeer.nutrition.meal.MealActivity;
+import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
 
 import java.util.Date;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentPage = CALENDAR;
 
     private static final int NEW_MEAL_REQUEST_CODE = 9526;
+    private static final int NEW_FOOD_REQUEST_CODE = 3844;
     private MainContainer container;
 
     private Callbacks callbacks;
@@ -62,12 +66,32 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        onShow();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        onShow();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add) {
+            if (currentPage == CALENDAR) {
+                showNewMealUi();
+            }
+            if (currentPage == FOOD_LIST) {
+                showNewFoodUi();
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void onShow() {
@@ -90,15 +114,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCalendarUi() {
-        container.replace(new CalendarView(this));
+        CalendarView calendarView = new CalendarView(this);
+        callbacks = calendarView;
+        container.replace(calendarView);
     }
 
     public void showFoodListUi() {
-        container.replace(new FoodListView(this));
+        FoodListView foodListView = new FoodListView(this);
+        callbacks = foodListView;
+        container.replace(foodListView);
     }
 
     public void showStatisticUi() {
-
+        callbacks = null;
     }
 
     public void showSettingsUi() {
@@ -109,12 +137,22 @@ public class MainActivity extends AppCompatActivity {
         MealActivity.startForResult(this, new Meal(new Date()), NEW_MEAL_REQUEST_CODE);
     }
 
+    public void showNewFoodUi() {
+        FoodActivity.startForResult(this, new Food(), NEW_FOOD_REQUEST_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NEW_MEAL_REQUEST_CODE && resultCode == RESULT_OK) {
-            Meal meal = data.getParcelableExtra(MealActivity.MEAL_EXTRA);
-            if (callbacks != null) {
-                callbacks.onNewMeal(meal);
+            long mealId = data.getLongExtra(MealActivity.MEAL_ID_EXTRA, 0);
+            if (mealId > 0 && callbacks != null) {
+                callbacks.onNewMeal(mealId);
+            }
+        }
+        if (requestCode == NEW_FOOD_REQUEST_CODE && resultCode == RESULT_OK) {
+            long foodId = data.getLongExtra(FoodActivity.FOOD_ID_EXTRA, 0);
+            if (foodId > 0 && callbacks != null) {
+                callbacks.onNewFood(foodId);
             }
         }
     }
@@ -126,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public interface Callbacks {
-        void onNewMeal(Meal meal);
+        void onNewMeal(long mealId);
+
+        void onNewFood(long foodId);
     }
 }

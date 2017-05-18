@@ -21,5 +21,6 @@ public interface FoodListContract {
         abstract void onFoodClick(Food food);
         abstract void onNewFoodClick();
         abstract void onRemoveFood(int position, Food food);
+        abstract void onNewFood(long foodId);
     }
 }

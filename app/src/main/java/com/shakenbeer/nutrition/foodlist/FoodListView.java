@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.food.FoodActivity;
+import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.Food;
+import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
 
@@ -18,7 +20,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class FoodListView extends RecyclerView implements FoodListContract.View {
+public class FoodListView extends RecyclerView implements FoodListContract.View,
+        MainActivity.Callbacks {
 
     @Inject
     FoodListContract.Presenter presenter;
@@ -102,5 +105,17 @@ public class FoodListView extends RecyclerView implements FoodListContract.View 
     @Override
     public void removeFood(int position, Food food) {
         adapter.removeItem(position);
+    }
+
+    @Override
+    public void onNewMeal(long mealId) {
+        //no interested, so do nothing
+    }
+
+    @Override
+    public void onNewFood(long foodId) {
+//        adapter.addItem(food);
+//        smoothScrollToPosition(adapter.getItemCount() - 1);
+        presenter.onNewFood(foodId);
     }
 }

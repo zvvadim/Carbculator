@@ -10,7 +10,7 @@ public interface FoodContract {
     interface View extends MvpView {
         void showFood(Food food);
         void showError(String message);
-        void showPreviousUi();
+        void showPreviousUi(long foodId);
     }
 
     abstract class Presenter extends BasePresenter<View> {

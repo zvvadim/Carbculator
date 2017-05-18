@@ -11,6 +11,7 @@ import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.day.DayActivity;
 import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.Day;
+import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
@@ -80,6 +81,11 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
     }
 
     @Override
+    public void clear() {
+        adapter.clear();
+    }
+
+    @Override
     public void showDays(List<Day> days) {
         adapter.addItems(days);
         showTodayIfNoData();
@@ -113,7 +119,12 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
     }
 
     @Override
-    public void onNewMeal(Meal meal) {
-        presenter.onDayGrow(meal, adapter.getItems());
+    public void onNewMeal(long mealId) {
+        presenter.onDayGrow(mealId, adapter.getItems());
+    }
+
+    @Override
+    public void onNewFood(long foodId) {
+        //not interested, so do nothing
     }
 }

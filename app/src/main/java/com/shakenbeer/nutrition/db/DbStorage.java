@@ -262,6 +262,26 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @Override
+    public Cursor queryMeal(long id) {
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+
+        queryBuilder.setTables(JOIN_ALL_TABLES);
+
+        String[] columns = new String[] { EatingTable.FULL_ID + " as " + _ID, EatingTable.COLUMN_NUMBER,
+                EatingTable.COLUMN_DATE, componentAmount(FoodTable.COLUMN_PROTEIN),
+                componentAmount(FoodTable.COLUMN_CARBS), componentAmount(FoodTable.COLUMN_FAT),
+                componentAmount(FoodTable.COLUMN_KCAL) };
+
+        String groupBy = EatingTable.FULL_ID + ", " + EatingTable.COLUMN_NUMBER + ", " + EatingTable.COLUMN_DATE;
+
+        String having = EatingTable.FULL_ID + " = " + id;
+
+        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, having, null);
+
+        return cursor;
+    }
+
+    @Override
     public long insertComponent(Component component, long eatingId) {
         ContentValues values = setComponentsValues(component, eatingId);
         return getWritableDatabase().insert(ComponentTable.TABLE_NAME, null, values);
