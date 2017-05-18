@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
+import com.shakenbeer.nutrition.food.FoodActivity;
 import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
@@ -90,7 +91,7 @@ public class FoodListView extends RecyclerView implements FoodListContract.View 
 
     @Override
     public void showFoodUi(Food food) {
-
+        FoodActivity.start(getContext(), food);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
@@ -15,7 +16,7 @@ import com.shakenbeer.nutrition.model.Food;
 import javax.inject.Inject;
 
 
-public class FoodActivity extends AppCompatActivity implements FoodContract.View {
+public class FoodActivity extends AppCompatActivity implements FoodContract.View, FoodListener {
 
     private static final String FOOD_EXTRA = "com.shakenbeer.nutrition.food.foodExtra";
 
@@ -55,6 +56,8 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
 
     private void initUi() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        binding.setListener(this);
     }
 
     private void initPresenter() {
@@ -74,7 +77,7 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
 
     @Override
     public void showFood(Food food) {
-
+        binding.setFood(food);
     }
 
     @Override
@@ -85,5 +88,49 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
     @Override
     public void showPreviousUi() {
         onBackPressed();
+    }
+
+    @Override
+    public void onNameChanged(CharSequence value) {
+        presenter.onNameChanged(value.toString());
+    }
+
+    @Override
+    public void onUnitAmountChanged(CharSequence value) {
+        int amount = value.length() > 0 ? Integer.parseInt(value.toString()) : 0;
+        presenter.onUnitAmountChanged(amount);
+    }
+
+    @Override
+    public void onUnitNameChanged(CharSequence value) {
+        presenter.onUnitNameChanged(value.toString());
+    }
+
+    @Override
+    public void onProteinChanged(CharSequence value) {
+        presenter.onProteinChanged(parseFloat(value));
+    }
+
+    @Override
+    public void onFatChanged(CharSequence value) {
+        presenter.onFatChanged(Float.parseFloat(value.toString()));
+    }
+
+    @Override
+    public void onCarbsChanged(CharSequence value) {
+        presenter.onCarbsChanged(Float.parseFloat(value.toString()));
+    }
+
+    @Override
+    public void onKcalChanged(CharSequence value) {
+        presenter.onKcalChanged(Float.parseFloat(value.toString()));
+    }
+
+    private float parseFloat(CharSequence value) {
+        return value.length() > 0 ? Float.parseFloat(value.toString()) : 0f;
+    }
+
+    public void onSaveClick(View view) {
+        presenter.onSavePerformed();
     }
 }
