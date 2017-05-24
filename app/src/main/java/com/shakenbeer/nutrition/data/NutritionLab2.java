@@ -21,6 +21,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Single;
 
 /**
@@ -38,17 +40,17 @@ public class NutritionLab2 {
 
     public DataCursor<Day> getDayCursor() {
         Cursor cursor = storage.queryDays();
-        return new DataCursor<Day>(cursor, new DbDayGetter());
+        return new DataCursor<>(cursor, new DbDayGetter());
     }
 
     public DataCursor<Food> getFoodCursor() {
         Cursor cursor = storage.queryFoods();
-        return new DataCursor<Food>(cursor, new DbFoodGetter());
+        return new DataCursor<>(cursor, new DbFoodGetter());
     }
 
     public DataCursor<Food> getFoodCursor(String startWith) {
         Cursor cursor = storage.queryFoods(startWith);
-        return new DataCursor<Food>(cursor, new DbFoodGetter());
+        return new DataCursor<>(cursor, new DbFoodGetter());
     }
 
     public Single<List<Day>> getDaysRx(int page, int offset) {
@@ -73,8 +75,8 @@ public class NutritionLab2 {
 
     public List<Meal> getMeals(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
-        List<Meal> list = new ArrayList<Meal>();
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
+        List<Meal> list = new ArrayList<>();
 
         if (eatingCursor.moveToFirst()) {
             do {
@@ -87,8 +89,8 @@ public class NutritionLab2 {
 
     public List<Meal> getMeals() {
         Cursor cursor = storage.queryEatings();
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
-        List<Meal> list = new ArrayList<Meal>();
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
+        List<Meal> list = new ArrayList<>();
 
         if (eatingCursor.moveToFirst()) {
             do {
@@ -105,8 +107,8 @@ public class NutritionLab2 {
 
     public List<Component> getComponents(Meal meal) {
         Cursor cursor = storage.queryComponents(meal);
-        DataCursor<Component> componentCursor = new DataCursor<Component>(cursor, new DbComponentGetter());
-        List<Component> list = new ArrayList<Component>();
+        DataCursor<Component> componentCursor = new DataCursor<>(cursor, new DbComponentGetter());
+        List<Component> list = new ArrayList<>();
 
         if (componentCursor.moveToFirst()) {
             do {
@@ -132,9 +134,9 @@ public class NutritionLab2 {
     }
 
     private List<Food> getFoods(Cursor cursor) {
-        DataCursor<Food> foodCursor = new DataCursor<Food>(cursor, new DbFoodGetter());
+        DataCursor<Food> foodCursor = new DataCursor<>(cursor, new DbFoodGetter());
 
-        List<Food> list = new ArrayList<Food>();
+        List<Food> list = new ArrayList<>();
 
         if (foodCursor.moveToFirst()) {
             do {
@@ -146,12 +148,7 @@ public class NutritionLab2 {
     }
 
     public Single<Long> saveFoodRx(final Food food) {
-        return Single.fromCallable(new Callable<Long>() {
-            @Override
-            public Long call() throws Exception {
-                return saveFood(food);
-            }
-        });
+        return Single.fromCallable(() -> saveFood(food));
     }
 
     public long saveFood(Food food) {
@@ -164,12 +161,7 @@ public class NutritionLab2 {
     }
 
     public Completable deleteFoodRx(final Food food) {
-        return Completable.fromRunnable(new Runnable() {
-            @Override
-            public void run() {
-                storage.updateMarkDeleted(food);
-            }
-        });
+        return Completable.fromRunnable(() -> storage.updateMarkDeleted(food));
     }
 
     public void deleteFood(Food food) {
@@ -177,12 +169,7 @@ public class NutritionLab2 {
     }
 
     public Single<Long> saveMealRx(final Meal meal) {
-        return Single.fromCallable(new Callable<Long>() {
-            @Override
-            public Long call() throws Exception {
-                return saveEating(meal);
-            }
-        });
+        return Single.fromCallable(() -> saveEating(meal));
     }
 
     public long saveEating(Meal meal) {
@@ -196,12 +183,7 @@ public class NutritionLab2 {
     }
 
     public Single<Long> saveComponentRx(final Component component, final long mealId) {
-        return Single.fromCallable(new Callable<Long>() {
-            @Override
-            public Long call() throws Exception {
-                return saveComponent(component, mealId);
-            }
-        });
+        return Single.fromCallable(() -> saveComponent(component, mealId));
     }
 
     public long saveComponent(Component component, long mealId) {
@@ -218,6 +200,10 @@ public class NutritionLab2 {
         storage.deleteComponent(component);
     }
 
+    public Completable deleteMealRx(Meal meal) {
+        return Completable.fromRunnable(() -> deleteEating(meal));
+    }
+
     public void deleteEating(Meal meal) {
         storage.deleteComponents(meal);
         storage.deleteEating(meal);
@@ -225,7 +211,7 @@ public class NutritionLab2 {
 
     public void deleteDay(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
         if (eatingCursor.moveToFirst()) {
             do {
                 deleteEating(eatingCursor.get());
@@ -235,16 +221,13 @@ public class NutritionLab2 {
     }
 
     public Single<Meal> getMealRx(final long mealId) {
-        return Single.fromCallable(new Callable<Meal>() {
-            @Override
-            public Meal call() throws Exception {
-                Cursor cursor = storage.queryMeal(mealId);
-                DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
-                if (eatingCursor.moveToFirst()) {
-                    return eatingCursor.get();
-                } else {
-                    return new Meal();
-                }
+        return Single.fromCallable(() -> {
+            Cursor cursor = storage.queryMeal(mealId);
+            DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
+            if (eatingCursor.moveToFirst()) {
+                return eatingCursor.get();
+            } else {
+                return new Meal();
             }
         });
     }

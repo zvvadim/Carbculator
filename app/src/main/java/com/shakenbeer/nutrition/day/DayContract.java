@@ -15,6 +15,7 @@ public interface DayContract {
         void showMeals(List<Meal> meals);
         void showMealUi(Meal meal);
         void showError(String message);
+        void showMealRemoved(int position);
         void showPreviousUi();
     }
 
@@ -22,5 +23,6 @@ public interface DayContract {
         abstract void obtainMeals(Day day);
         abstract void onMealClick(Meal meal);
         abstract void onAddMealClick();
+        abstract void onMealRemove(Meal meal, int position);
     }
 }

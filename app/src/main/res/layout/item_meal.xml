@@ -9,11 +9,10 @@
             type="com.shakenbeer.nutrition.model.Meal" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:orientation="vertical"
         android:paddingBottom="@dimen/margin_tiny"
         android:paddingLeft="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_medium"
@@ -32,9 +31,24 @@
             android:textStyle="bold"
             tools:text="Lunch"/>
 
+        <ImageButton
+            android:id="@+id/delete_meal"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/name_text_view"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/delete_meal"
+            android:src="@android:drawable/ic_menu_delete" />
+
         <LinearLayout
+            android:id="@+id/summary_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/name_text_view"
+            android:layout_toLeftOf="@id/delete_meal"
+            android:layout_toStartOf="@id/delete_meal"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/margin_tiny"
             android:paddingTop="@dimen/margin_tiny">
@@ -61,6 +75,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/summary_linear_layout"
+            android:layout_toLeftOf="@id/delete_meal"
+            android:layout_toStartOf="@id/delete_meal"
             android:orientation="horizontal">
 
             <TextView
@@ -91,5 +108,5 @@
                 tools:text="@string/carbs_colon" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

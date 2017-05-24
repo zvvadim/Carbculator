@@ -88,4 +88,5 @@
     <string name="carbs">"Carbs: %.1f"</string>
     <string name="protein">"Protein: %.1f"</string>
     <string name="fat">"Fat: %.1f"</string>
+    <string name="delete_meal">Delete meal</string>
 </resources>

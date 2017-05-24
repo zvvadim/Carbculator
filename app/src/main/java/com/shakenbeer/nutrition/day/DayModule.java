@@ -9,6 +9,18 @@ import dagger.Provides;
 @Module
 public class DayModule {
 
+    private final MealListener mealListener;
+
+    public DayModule(MealListener mealListener) {
+        this.mealListener = mealListener;
+    }
+
+    @Provides
+    @FeatureScope
+    MealListener provideMealListener() {
+        return mealListener;
+    }
+
     @Provides
     @FeatureScope
     DayContract.Presenter provideDayPresenter(NutritionLab2 nutritionLab2) {

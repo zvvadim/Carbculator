@@ -63,7 +63,7 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     private void injectDependencies() {
         DaggerDayComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(this).getComponent())
-                .dayModule(new DayModule())
+                .dayModule(new DayModule((position, meal) -> presenter.onMealRemove(meal, position)))
                 .build()
                 .inject(this);
     }
@@ -124,6 +124,11 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     @Override
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMealRemoved(int position) {
+        adapter.notifyItemRemoved(position);
     }
 
     @Override

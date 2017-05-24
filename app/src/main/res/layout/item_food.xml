@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:orientation="vertical"
         android:paddingBottom="@dimen/margin_tiny"
         android:paddingLeft="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_medium"

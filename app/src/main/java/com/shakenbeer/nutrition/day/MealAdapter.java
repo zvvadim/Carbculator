@@ -14,8 +14,11 @@ import javax.inject.Inject;
 
 public class MealAdapter extends BindingAdapter<Meal> {
 
+    private final MealListener mealListener;
+
     @Inject
-    public MealAdapter() {
+    public MealAdapter(MealListener mealListener) {
+        this.mealListener = mealListener;
     }
 
     @Override
@@ -25,6 +28,9 @@ public class MealAdapter extends BindingAdapter<Meal> {
 
     @Override
     public void onBindViewHolder(BindingViewHolder holder, int position) {
-        ((ItemMealBinding) holder.binding).setMeal(items.get(position));
+        ItemMealBinding binding = (ItemMealBinding) holder.binding;
+        binding.setMeal(items.get(position));
+        binding.deleteMeal.setOnClickListener(v ->
+                mealListener.onDelete(holder.getAdapterPosition(), items.get(holder.getAdapterPosition())));
     }
 }

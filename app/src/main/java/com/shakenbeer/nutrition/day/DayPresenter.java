@@ -11,12 +11,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 
 class DayPresenter extends DayContract.Presenter {
 
     private final NutritionLab2 nutritionLab2;
     private Day day;
+    private List<Meal> meals;
 
     @Inject
     DayPresenter(NutritionLab2 nutritionLab2) {
@@ -30,16 +32,19 @@ class DayPresenter extends DayContract.Presenter {
         nutritionLab2.getMealsRx(day)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {
-                    getMvpView().showMeals(meals);
-                    getMvpView().showDay(dayFromMeals(DayPresenter.this.day, meals));
-                }, throwable -> getMvpView().showError(throwable.getLocalizedMessage()));
+                .subscribe(this::processMeals, throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
 
     }
 
-    private Day dayFromMeals(Day day, List<Meal> meals) {
-        Day result = new Day();
-        result.setDate(day.getDate());
+    private void processMeals(@NonNull List<Meal> meals) {
+        this.meals = meals;
+        getMvpView().showMeals(meals);
+        recalculateDay(meals);
+        getMvpView().showDay(day);
+    }
+
+    private void recalculateDay(List<Meal> meals) {
         float protein = 0;
         float fat = 0;
         float carbs = 0;
@@ -51,11 +56,10 @@ class DayPresenter extends DayContract.Presenter {
             carbs += meal.getCarbs();
             kcal += meal.getKcal();
         }
-        result.setProtein(protein);
-        result.setFat(fat);
-        result.setCarbs(carbs);
-        result.setKcal(kcal);
-        return result;
+        day.setProtein(protein);
+        day.setFat(fat);
+        day.setCarbs(carbs);
+        day.setKcal(kcal);
     }
 
     @Override
@@ -67,6 +71,22 @@ class DayPresenter extends DayContract.Presenter {
     void onAddMealClick() {
         Calendar target = mergeDateTime();
         getMvpView().showMealUi(new Meal(target.getTime()));
+    }
+
+    @Override
+    void onMealRemove(Meal meal, int position) {
+        nutritionLab2.deleteMealRx(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> processRemovedMeal(position), throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
+    }
+
+    private void processRemovedMeal(int position) {
+        meals.remove(position);
+        getMvpView().showMealRemoved(position);
+        recalculateDay(meals);
+        getMvpView().showDay(day);
     }
 
     private Calendar mergeDateTime() {
