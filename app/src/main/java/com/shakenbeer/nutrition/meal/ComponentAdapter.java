@@ -36,18 +36,10 @@ public class ComponentAdapter extends BindingAdapter<Component> {
     public void onBindViewHolder(final BindingViewHolder holder, int position) {
         ItemComponentBinding binding = (ItemComponentBinding) holder.binding;
         binding.setComponent(items.get(position));
-        binding.deleteComponent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                componentListener.onDelete(holder.getAdapterPosition());
-            }
-        });
-        binding.componentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                componentListener.onSelectFood(holder.getAdapterPosition());
-            }
-        });
+        binding.deleteComponent.setOnClickListener(v ->
+                componentListener.onDelete(holder.getAdapterPosition()));
+        binding.componentButton.setOnClickListener(v ->
+                componentListener.onSelectFood(holder.getAdapterPosition()));
         binding.componentGramsEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {

@@ -117,18 +117,8 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         binding.componentsRecyclerView.
                 addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
         binding.componentsRecyclerView.setAdapter(adapter);
-        binding.addComponentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onAddComponent();
-            }
-        });
-        binding.saveEatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onSaveClick();
-            }
-        });
+        binding.addComponentButton.setOnClickListener(v -> presenter.onAddComponent());
+        binding.saveEatingButton.setOnClickListener(v -> presenter.onSaveClick());
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this, R.array.eating_names,
                 R.layout.spinner_item_eating);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item_eating);
@@ -144,18 +134,8 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
 
             }
         });
-        binding.eatingDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDateDialog();
-            }
-        });
-        binding.eatingTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimeDialog();
-            }
-        });
+        binding.eatingDateButton.setOnClickListener(v -> showDateDialog());
+        binding.eatingTimeButton.setOnClickListener(v -> showTimeDialog());
     }
 
     private void showDateDialog() {
@@ -205,15 +185,12 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     }
 
     private void showFoodChooser(final int position) {
-        FoodChooserDialog.newInstance(new FoodChooserDialog.Callbacks() {
-            @Override
-            public void onItemSelected(Food food) {
-                presenter.onComponentFoodSelected(adapter.getItem(position), food);
-                //TODO works because on synchronous calls
-                //should be called from presenter
-                //consider to refactor contract using indexes
-                adapter.notifyItemChanged(position);
-            }
+        FoodChooserDialog.newInstance(food -> {
+            presenter.onComponentFoodSelected(adapter.getItem(position), food);
+            //TODO works because on synchronous calls
+            //should be called from presenter
+            //consider to refactor contract using indexes
+            adapter.notifyItemChanged(position);
         }).show(getSupportFragmentManager(), null);
     }
 

@@ -68,21 +68,12 @@ public class FoodListPresenter extends FoodListContract.Presenter {
     }
 
     @Override
-    void onRemoveFood(final int position, final Food food) {
+    void onRemoveFood(int position, Food food) {
         nutritionLab2.deleteFoodRx(food)
                 .observeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        getMvpView().removeFood(position, food);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(() -> getMvpView().removeFood(position, food), throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     @Override

@@ -34,17 +34,8 @@ public class CalendarPresenter extends CalendarContract.Presenter {
         nutritionLab2.getDaysRx(page, OFFSET)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Day>>() {
-                    @Override
-                    public void accept(@NonNull List<Day> days) throws Exception {
-                        process(days);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(this::process, throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     private void process(@NonNull List<Day> days) {
@@ -82,12 +73,7 @@ public class CalendarPresenter extends CalendarContract.Presenter {
         nutritionLab2.getMealRx(mealId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Meal>() {
-                    @Override
-                    public void accept(@NonNull Meal meal) throws Exception {
-                        processNewMeal(meal, days);
-                    }
-                });
+                .subscribe(meal -> processNewMeal(meal, days));
     }
 
     private void processNewMeal(@NonNull Meal meal, List<Day> days) {

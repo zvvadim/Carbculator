@@ -38,18 +38,10 @@ public class MealPresenter extends MealContract.Presenter {
         nutritionLab2.getComponentsRx(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Component>>() {
-                    @Override
-                    public void accept(@NonNull List<Component> components) throws Exception {
-                        MealPresenter.this.components = components;
-                        getMvpView().showComponents(components);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(components1 -> {
+                    MealPresenter.this.components = components1;
+                    getMvpView().showComponents(components1);
+                }, throwable -> getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     @Override
@@ -74,24 +66,10 @@ public class MealPresenter extends MealContract.Presenter {
                 .saveMealRx(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .doOnSuccess(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long mealId) throws Exception {
-                        saveComponents(mealId);
-                    }
-                })
+                .doOnSuccess(this::saveComponents)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long mealId) throws Exception {
-                        getMvpView().showPreviousUi(mealId, true);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(mealId -> getMvpView().showPreviousUi(mealId, true), throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     private void saveComponents(long mealId) {

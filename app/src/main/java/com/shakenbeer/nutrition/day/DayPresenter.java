@@ -33,18 +33,10 @@ class DayPresenter extends DayContract.Presenter {
         nutritionLab2.getMealsRx(day)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Meal>>() {
-                    @Override
-                    public void accept(@NonNull List<Meal> meals) throws Exception {
-                        getMvpView().showMeals(meals);
-                        getMvpView().showDay(dayFromMeals(DayPresenter.this.day, meals));
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(meals -> {
+                    getMvpView().showMeals(meals);
+                    getMvpView().showDay(dayFromMeals(DayPresenter.this.day, meals));
+                }, throwable -> getMvpView().showError(throwable.getLocalizedMessage()));
 
     }
 

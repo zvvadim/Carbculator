@@ -79,12 +79,7 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
         binding.mealsRecyclerView.addItemDecoration(
                 new DividerItemDecoration(this, layoutManager.getOrientation()));
         binding.mealsRecyclerView.setAdapter(adapter);
-        adapter.setItemClickListener(new BindingAdapter.ItemClickListener<Meal>() {
-            @Override
-            public void onClick(Meal item, int position, View... shared) {
-                presenter.onMealClick(item);
-            }
-        });
+        adapter.setItemClickListener((item, position, shared) -> presenter.onMealClick(item));
     }
 
     private void initPresenter() {

@@ -34,12 +34,9 @@ public class FoodAdapter extends BindingAdapter<Food> {
     public void onBindViewHolder(final BindingViewHolder holder, int position) {
         ItemFoodBinding binding = (ItemFoodBinding) holder.binding;
         binding.setFood(items.get(position));
-        binding.deleteFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPosition = holder.getAdapterPosition();
-                foodListener.onDelete(adapterPosition, items.get(adapterPosition));
-            }
+        binding.deleteFood.setOnClickListener(v -> {
+            int adapterPosition = holder.getAdapterPosition();
+            foodListener.onDelete(adapterPosition, items.get(adapterPosition));
         });
     }
 }

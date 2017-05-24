@@ -66,14 +66,10 @@ public class FoodChooserDialog extends DialogFragment {
                 false);
 
         final ListView foodListView = (ListView) layout.findViewById(R.id.food_list_view);
-        foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        foodListView.setOnItemClickListener((parent, view, position, id) -> {
+            callbacks.onItemSelected(foodArrayAdapter.getItem(position));
+            FoodChooserDialog.this.getDialog().dismiss();
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                callbacks.onItemSelected(foodArrayAdapter.getItem(position));
-                FoodChooserDialog.this.getDialog().dismiss();
-
-            }
         });
 
         EditText searchEditText = (EditText) layout.findViewById(R.id.search_edit_text);
@@ -102,13 +98,10 @@ public class FoodChooserDialog extends DialogFragment {
         nutritionLab2.getFoodsRx(0, 1000)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Food>>() {
-                    @Override
-                    public void accept(@NonNull List<Food> foods) throws Exception {
-                        foodArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
-                                foods);
-                        foodListView.setAdapter(foodArrayAdapter);
-                    }
+                .subscribe(foods -> {
+                    foodArrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1,
+                            foods);
+                    foodListView.setAdapter(foodArrayAdapter);
                 });
 
         return builder.create();

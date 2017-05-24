@@ -64,16 +64,7 @@ public class FoodPresenter extends FoodContract.Presenter {
         nutritionLab2.saveFoodRx(food)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long foodId) throws Exception {
-                        getMvpView().showPreviousUi(foodId);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(foodId -> getMvpView().showPreviousUi(foodId), throwable ->
+                        getMvpView().showError(throwable.getLocalizedMessage()));
     }
 }

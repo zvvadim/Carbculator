@@ -63,12 +63,7 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
     }
 
     private void initListeners() {
-        adapter.setItemClickListener(new BindingAdapter.ItemClickListener<Day>() {
-            @Override
-            public void onClick(Day day, int position, View... shared) {
-                presenter.onDayClick(day);
-            }
-        });
+        adapter.setItemClickListener((day, position, shared) -> presenter.onDayClick(day));
 
         addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) getLayoutManager()) {
             @Override

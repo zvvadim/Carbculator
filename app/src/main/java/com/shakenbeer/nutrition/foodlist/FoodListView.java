@@ -13,7 +13,6 @@ import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.food.FoodActivity;
 import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.Food;
-import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 import com.shakenbeer.nutrition.util.ui.EndlessRecyclerViewScrollListener;
 
@@ -36,13 +35,6 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
 
     private Activity activity;
 
-    private FoodListener foodListener = new FoodListener() {
-        @Override
-        public void onDelete(int position, Food food) {
-            presenter.onRemoveFood(position, food);
-        }
-    };
-
     public FoodListView(Activity context) {
         super(context);
         this.activity = context;
@@ -54,7 +46,8 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
     private void injectDependencies(Context context) {
         DaggerFoodListComponent.builder()
                 .applicationComponent(CarbculatorApplication.get(context).getComponent())
-                .foodListModule(new FoodListModule(foodListener))
+                .foodListModule(new FoodListModule((position, food) ->
+                        presenter.onRemoveFood(position, food)))
                 .build()
                 .inject(this);
     }
@@ -67,12 +60,7 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
     }
 
     private void initListeners() {
-        adapter.setItemClickListener(new BindingAdapter.ItemClickListener<Food>() {
-            @Override
-            public void onClick(Food food, int position, View... shared) {
-                presenter.onFoodClick(food);
-            }
-        });
+        adapter.setItemClickListener((food, position, shared) -> presenter.onFoodClick(food));
 
         addOnScrollListener(new EndlessRecyclerViewScrollListener((LinearLayoutManager) getLayoutManager()) {
             @Override
