@@ -69,6 +69,22 @@ public class NutritionLab2 {
         return dayList;
     }
 
+    public Single<List<Day>> getAllDaysRx() {
+        return Single.just(getAllDays());
+    }
+
+    public List<Day> getAllDays() {
+        Cursor cursor = storage.queryDays();
+        DataCursor<Day> dayCursor = new DataCursor<>(cursor, new DbDayGetter());
+        List<Day> dayList = new ArrayList<>(cursor.getCount());
+        if (dayCursor.moveToFirst()) {
+            do {
+                dayList.add(dayCursor.get());
+            } while (dayCursor.moveToNext());
+        }
+        return dayList;
+    }
+
     public Single<List<Meal>> getMealsRx(Day day) {
         return Single.just(getMeals(day));
     }

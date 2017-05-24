@@ -14,6 +14,7 @@ import com.shakenbeer.nutrition.calendar.CalendarContract;
 import com.shakenbeer.nutrition.calendar.CalendarView;
 import com.shakenbeer.nutrition.foodlist.FoodListContract;
 import com.shakenbeer.nutrition.foodlist.FoodListView;
+import com.shakenbeer.nutrition.stat.StatisticsView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,35 +25,28 @@ public class MainActivity extends AppCompatActivity {
 
     private int currentPage = CALENDAR;
 
-
-
     private MainContainer container;
 
     private Callbacks callbacks;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_calendar:
-                    showCalendarUi();
-                    currentPage = CALENDAR;
-                    return true;
-                case R.id.navigation_food_list:
-                    showFoodListUi();
-                    currentPage = FOOD_LIST;
-                    return true;
-                case R.id.navigation_statistics:
-                    showStatisticUi();
-                    currentPage = STATISTICS;
-                    return true;
-            }
-            return false;
-        }
-
-    };
+            = item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_calendar:
+                        showCalendarUi();
+                        currentPage = CALENDAR;
+                        return true;
+                    case R.id.navigation_food_list:
+                        showFoodListUi();
+                        currentPage = FOOD_LIST;
+                        return true;
+                    case R.id.navigation_statistics:
+                        showStatisticUi();
+                        currentPage = STATISTICS;
+                        return true;
+                }
+                return false;
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +117,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showStatisticUi() {
-        clearContent();
-        callbacks = null;
+        StatisticsView statisticsView = new StatisticsView(this);
+        callbacks = statisticsView;
+        container.replace(statisticsView);
     }
 
     private void clearContent() {
