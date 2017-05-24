@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="position"
-            type="int" />
-
         <variable
             name="food"
             type="com.shakenbeer.nutrition.model.Food" />
@@ -50,7 +45,6 @@
             android:layout_below="@id/name_text_view"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/delete_food"
-            android:onClick="@{() -> listener.onDelete(position, food)}"
             android:src="@android:drawable/ic_menu_delete" />
 
         <LinearLayout

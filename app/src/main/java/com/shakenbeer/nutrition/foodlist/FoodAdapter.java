@@ -1,7 +1,9 @@
 package com.shakenbeer.nutrition.foodlist;
 
 import android.databinding.ViewDataBinding;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.shakenbeer.nutrition.databinding.ItemFoodBinding;
@@ -29,9 +31,15 @@ public class FoodAdapter extends BindingAdapter<Food> {
     }
 
     @Override
-    public void onBindViewHolder(BindingViewHolder holder, int position) {
+    public void onBindViewHolder(final BindingViewHolder holder, int position) {
         ItemFoodBinding binding = (ItemFoodBinding) holder.binding;
         binding.setFood(items.get(position));
-        binding.setPosition(position);
+        binding.deleteFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();
+                foodListener.onDelete(adapterPosition, items.get(adapterPosition));
+            }
+        });
     }
 }
