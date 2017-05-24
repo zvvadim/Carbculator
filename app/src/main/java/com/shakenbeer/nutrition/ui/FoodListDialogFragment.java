@@ -27,7 +27,7 @@ import com.shakenbeer.nutrition.model.Food;
 public class FoodListDialogFragment extends DialogFragment {
 
     public interface Callbacks {
-        public void onItemSelected(Food food);
+        void onItemSelected(Food food);
     }
 
     private ArrayAdapter<Food> foodArrayAdapter;

@@ -1,7 +1,6 @@
 package com.shakenbeer.nutrition.model;
 
 import java.util.Date;
-import java.util.List;
 
 import android.database.Cursor;
 

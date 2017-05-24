@@ -23,7 +23,6 @@ import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.databinding.ActivityMealBinding;
 import com.shakenbeer.nutrition.model.Component;
-import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
 
 import java.util.Calendar;

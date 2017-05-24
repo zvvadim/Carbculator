@@ -41,8 +41,6 @@ public class NutritionLab {
         return new DataCursor<Day>(cursor, new DbDayGetter());
     }
 
-    ;
-
     public DataCursor<Food> getFoodCursor() {
         Cursor cursor = storage.queryFoods();
         return new DataCursor<Food>(cursor, new DbFoodGetter());

@@ -60,7 +60,7 @@ public class DayFragment extends ListFragment {
 
         nutritionLab = NutritionLab.getInstance(getActivity().getApplicationContext());
 
-        day = (Day) getArguments().getParcelable(EXTRA_DAY);
+        day = getArguments().getParcelable(EXTRA_DAY);
 
         new AsyncEatingsLoad().execute(day);
 

@@ -8,5 +8,5 @@ import android.database.Cursor;
  * @param <T>
  */
 public interface DataGetter<T> {
-    public T get(Cursor cursor);
+    T get(Cursor cursor);
 }

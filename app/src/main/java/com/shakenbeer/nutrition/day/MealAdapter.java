@@ -4,7 +4,6 @@ import android.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.databinding.ItemMealBinding;
 import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.util.ui.BindingAdapter;

@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 public final class DBContract {
 
     private DBContract() {
-    };
+    }
 
     public static abstract class FoodTable implements BaseColumns {
         public static final String TABLE_NAME = "food";        

@@ -287,7 +287,6 @@ public class FoodFragment extends Fragment {
             if (getActivity().getIntent().getExtras().get(EXTRA_REQUEST_CODE) != null) {
                 getActivity().setResult(Activity.RESULT_OK);
             }
-            ;
         }
         getActivity().finish();
     }

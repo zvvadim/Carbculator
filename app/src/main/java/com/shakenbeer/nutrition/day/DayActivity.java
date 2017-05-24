@@ -1,17 +1,14 @@
 package com.shakenbeer.nutrition.day;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
@@ -20,7 +17,6 @@ import com.shakenbeer.nutrition.databinding.ActivityDayBinding;
 import com.shakenbeer.nutrition.meal.MealActivity;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Meal;
-import com.shakenbeer.nutrition.util.ui.BindingAdapter;
 
 import java.util.List;
 

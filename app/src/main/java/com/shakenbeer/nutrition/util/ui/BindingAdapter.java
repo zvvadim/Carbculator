@@ -7,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shakenbeer.nutrition.model.Component;
-import com.shakenbeer.nutrition.model.Day;
-
 import java.util.ArrayList;
 import java.util.List;
 

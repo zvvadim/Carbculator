@@ -6,14 +6,11 @@ import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Meal;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 class DayPresenter extends DayContract.Presenter {

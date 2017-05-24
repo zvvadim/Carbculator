@@ -12,15 +12,8 @@ import android.view.MenuItem;
 import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.calendar.CalendarContract;
 import com.shakenbeer.nutrition.calendar.CalendarView;
-import com.shakenbeer.nutrition.food.FoodActivity;
 import com.shakenbeer.nutrition.foodlist.FoodListContract;
 import com.shakenbeer.nutrition.foodlist.FoodListView;
-import com.shakenbeer.nutrition.meal.MealActivity;
-import com.shakenbeer.nutrition.model.Day;
-import com.shakenbeer.nutrition.model.Food;
-import com.shakenbeer.nutrition.model.Meal;
-
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 

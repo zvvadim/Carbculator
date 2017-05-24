@@ -7,7 +7,6 @@ import com.shakenbeer.nutrition.model.Meal;
 import com.shakenbeer.nutrition.presentation.BasePresenter;
 import com.shakenbeer.nutrition.presentation.MvpView;
 
-import java.util.Date;
 import java.util.List;
 
 public interface MealContract {
