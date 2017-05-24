@@ -1,5 +1,6 @@
 package com.shakenbeer.nutrition.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,10 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.shakenbeer.nutrition.R;
+import com.shakenbeer.nutrition.calendar.CalendarContract;
 import com.shakenbeer.nutrition.calendar.CalendarView;
 import com.shakenbeer.nutrition.food.FoodActivity;
+import com.shakenbeer.nutrition.foodlist.FoodListContract;
 import com.shakenbeer.nutrition.foodlist.FoodListView;
 import com.shakenbeer.nutrition.meal.MealActivity;
+import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
 
@@ -27,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private int currentPage = CALENDAR;
 
-    private static final int NEW_MEAL_REQUEST_CODE = 9526;
-    private static final int NEW_FOOD_REQUEST_CODE = 3844;
+
+
     private MainContainer container;
 
     private Callbacks callbacks;
@@ -84,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add) {
             if (currentPage == CALENDAR) {
-                showNewMealUi();
+                ((CalendarContract.View) callbacks).showNewMealUi();
             }
             if (currentPage == FOOD_LIST) {
-                showNewFoodUi();
+                ((FoodListContract.View) callbacks).showNewFoodUi();
             }
             return true;
         }
@@ -126,35 +130,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showStatisticUi() {
+        clearContent();
         callbacks = null;
-    }
-
-    public void showSettingsUi() {
-
-    }
-
-    public void showNewMealUi() {
-        MealActivity.startForResult(this, new Meal(new Date()), NEW_MEAL_REQUEST_CODE);
-    }
-
-    public void showNewFoodUi() {
-        FoodActivity.startForResult(this, new Food(), NEW_FOOD_REQUEST_CODE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == NEW_MEAL_REQUEST_CODE && resultCode == RESULT_OK) {
-            long mealId = data.getLongExtra(MealActivity.MEAL_ID_EXTRA, 0);
-            if (mealId > 0 && callbacks != null) {
-                callbacks.onNewMeal(mealId);
-            }
-        }
-        if (requestCode == NEW_FOOD_REQUEST_CODE && resultCode == RESULT_OK) {
-            long foodId = data.getLongExtra(FoodActivity.FOOD_ID_EXTRA, 0);
-            if (foodId > 0 && callbacks != null) {
-                callbacks.onNewFood(foodId);
-            }
-        }
     }
 
     private void clearContent() {
@@ -163,9 +140,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public interface Callbacks {
-        void onNewMeal(long mealId);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (callbacks != null) {
+            callbacks.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
-        void onNewFood(long foodId);
+    public interface Callbacks {
+        Activity getActivity();
+
+        void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 }

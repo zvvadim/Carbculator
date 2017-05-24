@@ -1,5 +1,6 @@
 package com.shakenbeer.nutrition.day;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -27,7 +28,7 @@ import javax.inject.Inject;
 
 public class DayActivity extends AppCompatActivity implements DayContract.View {
 
-    private static final String DAY_EXTRA = "com.shakenbeer.nutrition.day.dayExtra";
+    public static final String DAY_EXTRA = "com.shakenbeer.nutrition.day.dayExtra";
 
     @Inject
     DayContract.Presenter presenter;
@@ -35,10 +36,10 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     MealAdapter adapter;
     private ActivityDayBinding binding;
 
-    public static void start(Context context, Day day) {
-        Intent starter = new Intent(context, DayActivity.class);
+    public static void startForResult(Activity activity, Day day, int requestCode) {
+        Intent starter = new Intent(activity, DayActivity.class);
         starter.putExtra(DAY_EXTRA, day);
-        context.startActivity(starter);
+        activity.startActivityForResult(starter, requestCode);
     }
 
     @Override
@@ -114,6 +115,9 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
     @Override
     public void showDay(Day day) {
         binding.dayView.setDay(day);
+        Intent data = new Intent();
+        data.putExtra(DAY_EXTRA, day);
+        setResult(RESULT_OK, data);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.shakenbeer.nutrition.calendar;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import com.shakenbeer.nutrition.CarbculatorApplication;
 import com.shakenbeer.nutrition.day.DayActivity;
 import com.shakenbeer.nutrition.main.MainActivity;
+import com.shakenbeer.nutrition.meal.MealActivity;
 import com.shakenbeer.nutrition.model.Day;
 import com.shakenbeer.nutrition.model.Food;
 import com.shakenbeer.nutrition.model.Meal;
@@ -21,16 +24,24 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_OK;
+
 public class CalendarView extends RecyclerView implements CalendarContract.View,
         MainActivity.Callbacks {
+
+    private static final int NEW_MEAL_REQUEST_CODE = 9526;
+    private static final int EXISTING_DAY_REQUEST_CODE = 4945;
 
     @Inject
     CalendarContract.Presenter presenter;
     @Inject
     DayAdapter adapter;
 
-    public CalendarView(Context context) {
+    private Activity activity;
+
+    public CalendarView(Activity context) {
         super(context);
+        this.activity = context;
         injectDependencies(context);
         initUi(context);
         initListeners();
@@ -101,12 +112,17 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
 
     @Override
     public void showDayUi(Day day) {
-        DayActivity.start(getContext(), day);
+        DayActivity.startForResult(getActivity(), day, EXISTING_DAY_REQUEST_CODE);
     }
 
     @Override
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showNewMealUi() {
+        MealActivity.startForResult(getActivity(), new Meal(new Date()), NEW_MEAL_REQUEST_CODE);
     }
 
     @Override
@@ -119,12 +135,23 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
     }
 
     @Override
-    public void onNewMeal(long mealId) {
-        presenter.onDayGrow(mealId, adapter.getItems());
+    public Activity getActivity() {
+        return activity;
     }
 
     @Override
-    public void onNewFood(long foodId) {
-        //not interested, so do nothing
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NEW_MEAL_REQUEST_CODE && resultCode == RESULT_OK) {
+            long mealId = data.getLongExtra(MealActivity.MEAL_ID_EXTRA, 0);
+            if (mealId > 0) {
+                presenter.onDayGrow(mealId, adapter.getItems());
+            }
+        }
+        if (requestCode == EXISTING_DAY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Day day = data.getParcelableExtra(DayActivity.DAY_EXTRA);
+            if (day != null) {
+                presenter.onDayUpdated(day, adapter.getItems());
+            }
+        }
     }
 }

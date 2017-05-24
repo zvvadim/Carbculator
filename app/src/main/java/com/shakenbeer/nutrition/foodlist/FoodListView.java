@@ -1,6 +1,8 @@
 package com.shakenbeer.nutrition.foodlist;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +21,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class FoodListView extends RecyclerView implements FoodListContract.View,
         MainActivity.Callbacks {
+
+    private static final int NEW_FOOD_REQUEST_CODE = 3844;
 
     @Inject
     FoodListContract.Presenter presenter;
     @Inject
     FoodAdapter adapter;
+
+    private Activity activity;
 
     private FoodListener foodListener = new FoodListener() {
         @Override
@@ -35,8 +43,9 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
         }
     };
 
-    public FoodListView(Context context) {
+    public FoodListView(Activity context) {
         super(context);
+        this.activity = context;
         injectDependencies(context);
         initUi(context);
         initListeners();
@@ -93,6 +102,11 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
     }
 
     @Override
+    public void showNewFoodUi() {
+        FoodActivity.startForResult(getActivity(), new Food(), NEW_FOOD_REQUEST_CODE);
+    }
+
+    @Override
     public void showFoodUi(Food food) {
         FoodActivity.start(getContext(), food);
     }
@@ -107,15 +121,19 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
         adapter.removeItem(position);
     }
 
+
     @Override
-    public void onNewMeal(long mealId) {
-        //no interested, so do nothing
+    public Activity getActivity() {
+        return activity;
     }
 
     @Override
-    public void onNewFood(long foodId) {
-//        adapter.addItem(food);
-//        smoothScrollToPosition(adapter.getItemCount() - 1);
-        presenter.onNewFood(foodId);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NEW_FOOD_REQUEST_CODE && resultCode == RESULT_OK) {
+            long foodId = data.getLongExtra(FoodActivity.FOOD_ID_EXTRA, 0);
+            if (foodId > 0) {
+                presenter.onNewFood(foodId);
+            }
+        }
     }
 }

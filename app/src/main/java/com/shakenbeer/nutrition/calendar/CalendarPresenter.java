@@ -68,6 +68,16 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     }
 
     @Override
+    void onDayUpdated(Day day, List<Day> days) {
+        for (int i = 0; i < days.size(); i++) {
+            if (DateUtils.sameDay(days.get(i).getDate(), day.getDate())) {
+                getMvpView().showDayUpdated(day, i, true);
+                return;
+            }
+        }
+    }
+
+    @Override
     void onDayGrow(long mealId, final List<Day> days) {
         nutritionLab2.getMealRx(mealId)
                 .subscribeOn(Schedulers.io())
