@@ -3,15 +3,14 @@ package com.shakenbeer.nutrition.stat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.CarbculatorApplication;
-import com.shakenbeer.nutrition.R;
 import com.shakenbeer.nutrition.databinding.StatisticsViewBinding;
 import com.shakenbeer.nutrition.main.MainActivity;
 import com.shakenbeer.nutrition.model.Statistics;
@@ -19,7 +18,7 @@ import com.shakenbeer.nutrition.model.Statistics;
 import javax.inject.Inject;
 
 
-public class StatisticsView extends FrameLayout implements StatisticsContract.View,
+public class StatisticsView extends RelativeLayout implements StatisticsContract.View,
         MainActivity.Callbacks {
 
     @Inject
@@ -37,10 +36,6 @@ public class StatisticsView extends FrameLayout implements StatisticsContract.Vi
                 .inject(this);
     }
 
-    public View getView() {
-        return binding.getRoot();
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -50,6 +45,7 @@ public class StatisticsView extends FrameLayout implements StatisticsContract.Vi
 
     @Override
     protected void onDetachedFromWindow() {
+        presenter.detachView();
         super.onDetachedFromWindow();
     }
 

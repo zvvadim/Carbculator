@@ -53,7 +53,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
     public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
-    private static final int REQUEST_IMPORT_FILE = 0;
+    private static final int REQUEST_IMPORT_FILE = 3;
     private static final int ADD_FOOD = 0;
     private static final int EDIT_FOOD = 1;
     private NutritionLab nutritionLab;
@@ -136,7 +136,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
 
     private void exportToCsv() {
         if (isExternalStorageWritable()) {
-            new AsyncExportToCsv(getActivity()).execute();
+            new AsyncExportFoodsToCsv(getActivity()).execute();
 
         }
     }
@@ -166,7 +166,7 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         if (requestCode == REQUEST_IMPORT_FILE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = data.getData();
-                new AsyncImportFromCsv(getActivity()).execute(uri);
+                new AsyncImportFoodsFromCsv(getActivity()).execute(uri);
             }
         } else {
 
@@ -285,13 +285,13 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         }
     }
 
-    private class AsyncExportToCsv extends AsyncTask<Void, Void, Boolean> {
+    private class AsyncExportFoodsToCsv extends AsyncTask<Void, Void, Boolean> {
 
         private Context context;
         private String errorDescription;
         private volatile String dir;
 
-        public AsyncExportToCsv(Context ctx) {
+        public AsyncExportFoodsToCsv(Context ctx) {
             context = ctx;
         }
 
@@ -439,11 +439,11 @@ public class FoodListFragment extends ListFragment implements LoaderCallbacks<Cu
         }
     }
 
-    private class AsyncImportFromCsv extends AsyncTask<Uri, Void, Boolean> {
+    private class AsyncImportFoodsFromCsv extends AsyncTask<Uri, Void, Boolean> {
 
         private Context context;
 
-        public AsyncImportFromCsv(Context ctx) {
+        public AsyncImportFoodsFromCsv(Context ctx) {
             context = ctx;
         }
 
