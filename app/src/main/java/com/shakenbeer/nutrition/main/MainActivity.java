@@ -1,10 +1,10 @@
 package com.shakenbeer.nutrition.main;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -13,11 +13,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.shakenbeer.nutrition.R;
@@ -46,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private static final int FOOD_LIST = 2;
     private static final int STATISTICS = 3;
     private static final int SETTINGS = 4;
+
+    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 325;
+    private static final int EXPORT_CALENDAR = 1;
+    private static final int EXPORT_FOODS = 2;
+    private static final int IMPORT_FOODS = 3;
+
+    private int wantedAction;
 
     private int currentPage = CALENDAR;
 
@@ -124,16 +132,22 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.action_export_to_csv) {
             if (currentPage == CALENDAR) {
-                exportToCsv();
+                if (ensureWritePermission(EXPORT_CALENDAR)) {
+                    exportToCsv();
+                }
             }
             if (currentPage == FOOD_LIST) {
-                exportFoodsToCsv();
+                if (ensureWritePermission(EXPORT_FOODS)) {
+                    exportFoodsToCsv();
+                }
             }
             return true;
         }
         if (item.getItemId() == R.id.action_import_from_csv) {
             if (currentPage == FOOD_LIST) {
-                importFoodFromCsv();
+                if (ensureWritePermission(IMPORT_FOODS)) {
+                    importFoodFromCsv();
+                }
             }
         }
         return super.onOptionsItemSelected(item);
@@ -142,14 +156,17 @@ public class MainActivity extends AppCompatActivity {
     void updateMenu() {
         switch (currentPage) {
             case CALENDAR:
+                showOption(R.id.add);
                 hideOption(R.id.action_import_from_csv);
                 showOption(R.id.action_export_to_csv);
                 break;
             case FOOD_LIST:
+                showOption(R.id.add);
                 showOption(R.id.action_import_from_csv);
                 showOption(R.id.action_export_to_csv);
                 break;
             case STATISTICS:
+                hideOption(R.id.add);
                 hideOption(R.id.action_import_from_csv);
                 hideOption(R.id.action_export_to_csv);
                 break;
@@ -206,7 +223,61 @@ public class MainActivity extends AppCompatActivity {
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
+    private boolean ensureWritePermission(int action) {
+        wantedAction = action;
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.write_external_storage_request_title)
+                        .setMessage(R.string.write_external_storage_request_rationale)
+                        .setPositiveButton(R.string.permission_button_accept, (dialog1, which) ->
+                                ActivityCompat.requestPermissions(MainActivity.this,
+                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                        PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE))
+                        .setNegativeButton(R.string.permission_button_deny, null)
+                        .show();
+
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (wantedAction == EXPORT_CALENDAR) {
+                        exportToCsv();
+                    }
+                    if (wantedAction == EXPORT_FOODS) {
+                        exportFoodsToCsv();
+                    }
+                    if (wantedAction == IMPORT_FOODS) {
+                        importFoodFromCsv();
+                    }
+                }
+            }
+        }
+    }
+
+    ///////////////////////////////////////////
     ////////// Copy from old version //////////
+    ///////////////////////////////////////////
 
     private void exportToCsv() {
         if (isExternalStorageWritable()) {
@@ -490,7 +561,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } catch (IOException e) {
-                dir = e.getMessage();
+                dir = e.getLocalizedMessage();
                 return false;
             } finally {
                 try {

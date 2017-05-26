@@ -76,4 +76,6 @@ public class StatisticsView extends RelativeLayout implements StatisticsContract
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
+
+
 }
