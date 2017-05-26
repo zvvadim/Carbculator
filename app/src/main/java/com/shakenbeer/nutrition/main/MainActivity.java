@@ -352,7 +352,8 @@ public class MainActivity extends AppCompatActivity {
                 path = new File(path.getAbsolutePath(), "Carbculator");
                 if (!path.exists()) {
                     if (!path.mkdirs()) {
-                        errorDescription = getString(R.string.dialog_message_error_creating_directory);
+                        errorDescription =
+                                getString(R.string.dialog_message_error_creating_directory);
                         return null;
                     }
                 }
@@ -433,10 +434,8 @@ public class MainActivity extends AppCompatActivity {
                                         return;
                                     }
 
-
                                     Intent intent = new Intent(Intent.ACTION_VIEW);
                                     setProperMimeType(intent);
-
                                     startActivity(intent);
 
                                     dialog12.cancel();
@@ -470,7 +469,6 @@ public class MainActivity extends AppCompatActivity {
     ///////// From old version - import/export foods list /////////
 
     public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
-    private Uri uriExport;
 
     private class AsyncExportFoodsToCsv extends AsyncTask<Void, Void, Boolean> {
 
@@ -540,7 +538,7 @@ public class MainActivity extends AppCompatActivity {
                 File file = new File(path.getAbsolutePath() + "/" +
                         CARBCULATOR_FOODCATALOG_CSV);
 
-                uriExport = Uri.fromFile(file);
+                mUriExport = Uri.fromFile(file);
 
                 file.createNewFile();
                 csvWrite = new CSVWriter(new FileWriter(file));
@@ -561,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } catch (IOException e) {
-                dir = e.getLocalizedMessage();
+                dir = e.getMessage();
                 return false;
             } finally {
                 try {
@@ -590,7 +588,7 @@ public class MainActivity extends AppCompatActivity {
                                 (dialog12, id) -> dialog12.cancel())
                         .setNeutralButton("Open",
                                 (dialog1, id) -> {
-                                    if (uriExport == null) {
+                                    if (mUriExport == null) {
                                         return;
                                     }
 
