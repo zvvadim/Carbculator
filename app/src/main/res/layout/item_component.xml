@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="component"
             type="com.shakenbeer.nutrition.model.Component" />
@@ -27,11 +28,15 @@
             android:baselineAligned="false"
             android:orientation="vertical">
 
-            <Button
+            <TextView
                 android:id="@+id/component_button"
-                style="@style/Widget.AppCompat.Spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/ic_menu_down_black_24dp"
+                android:drawableEnd="@drawable/ic_menu_down_black_24dp"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat"
                 android:text="@{component.foodName ?? @string/select_food}"
                 android:textSize="@dimen/text_size_medium"
                 tools:text="@string/select_food" />
@@ -48,7 +53,7 @@
                     android:hint="@string/ingredient_grams"
                     android:inputType="number"
                     android:maxLength="8"
-                    android:text="@{String.valueOf(component.grams)}"/>
+                    android:text="@{String.valueOf(component.grams)}" />
 
                 <TextView
                     android:id="@+id/component_unit_name_text_view"

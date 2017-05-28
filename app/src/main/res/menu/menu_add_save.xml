@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/add"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_plus_black_24dp"
         app:showAsAction="ifRoom"
         android:title="@string/add" />
 
     <item
         android:id="@+id/save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_content_save_black_24dp"
         app:showAsAction="ifRoom"
         android:title="@string/add" />
 

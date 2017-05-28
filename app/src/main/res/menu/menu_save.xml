@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_content_save_black_24dp"
         app:showAsAction="always"
         android:title="@string/add" />
 
