@@ -135,6 +135,20 @@ public class NutritionLab2 {
         return list;
     }
 
+    public Single<Food> getFoodRx(long foodId) {
+        return Single.just(getFood(foodId));
+    }
+
+    public Food getFood(long foodId) {
+        Cursor cursor = storage.queryFood(foodId);
+        DataCursor<Food> foodCursor = new DataCursor<>(cursor, new DbFoodGetter());
+        if (foodCursor.moveToFirst()) {
+            return foodCursor.get();
+        } else {
+            return new Food();
+        }
+    }
+
     public Single<List<Food>> getFoodsRx(int page, int offset) {
         return Single.just(getFoods(page, offset));
     }

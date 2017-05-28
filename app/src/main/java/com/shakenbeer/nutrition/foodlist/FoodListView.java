@@ -25,6 +25,7 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
         MainActivity.Callbacks {
 
     private static final int NEW_FOOD_REQUEST_CODE = 3844;
+    private static final int EXISTING_FOOD_REQUEST_CODE = 7762;
 
     @Inject
     FoodListContract.Presenter presenter;
@@ -94,7 +95,7 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
 
     @Override
     public void showFoodUi(Food food) {
-        FoodActivity.start(getContext(), food);
+        FoodActivity.startForResult(getActivity(), food, EXISTING_FOOD_REQUEST_CODE);
     }
 
     @Override
@@ -105,6 +106,16 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
     @Override
     public void removeFood(int position, Food food) {
         adapter.removeItem(position);
+    }
+
+    @Override
+    public void showFoodUpdated(Food food, int position) {
+        adapter.replaceItem(food, position);
+    }
+
+    @Override
+    public void showNewFood(Food food) {
+        adapter.addItem(food);
     }
 
 
@@ -119,6 +130,13 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
             long foodId = data.getLongExtra(FoodActivity.FOOD_ID_EXTRA, 0);
             if (foodId > 0) {
                 presenter.onNewFood(foodId);
+            }
+        }
+
+        if (requestCode == EXISTING_FOOD_REQUEST_CODE && resultCode == RESULT_OK) {
+            long foodId = data.getLongExtra(FoodActivity.FOOD_ID_EXTRA, 0);
+            if (foodId > 0) {
+                presenter.onFoodUpdated(foodId, adapter.getItems());
             }
         }
     }

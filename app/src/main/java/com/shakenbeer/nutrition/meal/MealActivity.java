@@ -170,7 +170,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_add_save, menu);
         return true;
     }
 
@@ -178,6 +178,10 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.add) {
             presenter.onAddComponent();
+            return true;
+        }
+        if (item.getItemId() == R.id.save) {
+            presenter.onSaveClick();
             return true;
         }
         return super.onOptionsItemSelected(item);

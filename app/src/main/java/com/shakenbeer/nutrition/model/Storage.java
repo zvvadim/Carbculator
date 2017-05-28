@@ -19,6 +19,8 @@ public interface Storage {
     Cursor queryFoods();
 
     Cursor queryFoods(String startWith);
+
+    Cursor queryFood(long foodId);
     
     Cursor queryComponents(Meal meal);
 

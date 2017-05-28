@@ -15,6 +15,8 @@ public interface FoodListContract {
         void showFoodUi(Food food);
         void showError(String message);
         void removeFood(int position, Food food);
+        void showFoodUpdated(Food food, int position);
+        void showNewFood(Food food);
     }
 
     abstract class Presenter extends BasePresenter<View> {
@@ -22,6 +24,7 @@ public interface FoodListContract {
         abstract void onFoodClick(Food food);
         abstract void onNewFoodClick();
         abstract void onRemoveFood(int position, Food food);
+        abstract void onFoodUpdated(long foodId, List<Food> foods);
         abstract void onNewFood(long foodId);
     }
 }

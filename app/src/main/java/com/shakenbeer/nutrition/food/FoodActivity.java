@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -75,6 +77,20 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
             food = new Food();
         }
         presenter.setFood(food);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.save) {
+            presenter.onSavePerformed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

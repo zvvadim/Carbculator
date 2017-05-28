@@ -29,19 +29,10 @@ public class FoodListPresenter extends FoodListContract.Presenter {
     void obtainFoods() {
         if (everythingIsHere) return;
         nutritionLab2.getFoodsRx(page, OFFSET)
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Food>>() {
-                    @Override
-                    public void accept(@NonNull List<Food> foods) throws Exception {
-                        processFoods(foods);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        getMvpView().showError(throwable.getLocalizedMessage());
-                    }
-                });
+                .subscribe(foods -> processFoods(foods), throwable
+                        -> getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     private void processFoods(List<Food> foods) {
@@ -69,14 +60,35 @@ public class FoodListPresenter extends FoodListContract.Presenter {
     @Override
     void onRemoveFood(int position, Food food) {
         nutritionLab2.deleteFoodRx(food)
-                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> getMvpView().removeFood(position, food), throwable ->
                         getMvpView().showError(throwable.getLocalizedMessage()));
     }
 
     @Override
-    void onNewFood(long foodId) {
+    void onFoodUpdated(long foodId, List<Food> foods) {
+        nutritionLab2.getFoodRx(foodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(food -> processFood(food, foods), throwable
+                        -> getMvpView().showError(throwable.getLocalizedMessage()));
+    }
 
+    private void processFood(Food food, List<Food> foods) {
+        for (int i = 0; i < foods.size(); i++) {
+            if (food.getId() == foods.get(i).getId()) {
+                getMvpView().showFoodUpdated(food, i);
+            }
+        }
+    }
+
+    @Override
+    void onNewFood(long foodId) {
+        nutritionLab2.getFoodRx(foodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(food -> getMvpView().showNewFood(food), throwable
+                        -> getMvpView().showError(throwable.getLocalizedMessage()));
     }
 }
