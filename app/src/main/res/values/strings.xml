@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Carbculator</string>
@@ -92,5 +93,5 @@
     <string name="permission_button_accept">Allow</string>
     <string name="permission_button_deny">Deny</string>
     <string name="write_external_storage_request_title">Write files</string>
-    <string name="write_external_storage_request_rationale">We need your permission to write data to CSV files.</string>
+    <string name="write_external_storage_request_rationale">We need your permission to write files to your device.</string>
 </resources>

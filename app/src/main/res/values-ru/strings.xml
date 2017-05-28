@@ -66,19 +66,32 @@
     <string name="total_kcal">ККАЛ</string>
     <string name="total_ratio">БЖУ</string>
     <string name="per_day_statistics">СРЕД. ЗА ДЕНЬ</string>
-    <string name="export_to_csv">Экспорт. в CSV</string>
-    <string name="exporting">Экспортируем…</string>
-
+    <string name="export_to_csv">Экспорт в CSV</string>
     <string name="import_from_csv">Импорт из CSV</string>
+    <string name="exporting">Экспортируем…</string>
     <string name="importing">Импортируем…</string>
 
     <string name="dialog_action_open">Открыть</string>
-    <string name="dialog_message_export_success">Вы можете найти отчет в </string>
-    <string name="dialog_message_export_failure">Failed to export:</string>
-    <string name="dialog_message_no_storage">There is no available public storage</string>
-    <string name="dialog_message_error_creating_directory">Directory not created</string>
+    <string name="dialog_message_export_success">Вы можете найти отчет в</string>
+    <string name="dialog_message_export_failure">Ошибка экпорта:</string>
+    <string name="dialog_message_no_storage">Отуствует общее место для сохранения</string>
+    <string name="dialog_message_error_creating_directory">Папка не создана</string>
 
     <string name="dialog_message_import_success">Импорт прошел успешно</string>
-    <string name="dialog_message_import_failure">Failed to import. Use exported file as example.</string>
+    <string name="dialog_message_import_failure">Провал импорта. Используйте экспортированный файл как пример.</string>
 
+    <!-- Carbculator 2 -->
+    <string name="calendar">Календарь</string>
+    <string name="settings">Настройки</string>
+
+    <string name="kcal">"Ккал: %.1f"</string>
+    <string name="pfc_ratio">"БЖУ: %s"</string>
+    <string name="carbs">"Углеводы: %.1f"</string>
+    <string name="protein">"Белки: %.1f"</string>
+    <string name="fat">"Жиры: %.1f"</string>
+    <string name="delete_meal">Удалить прием еды</string>
+    <string name="permission_button_accept">Позволить</string>
+    <string name="permission_button_deny">Запретить</string>
+    <string name="write_external_storage_request_title">Запись файлов</string>
+    <string name="write_external_storage_request_rationale">Нужно ваше разрешение на запиь файлов на устройстве.</string>
 </resources>
