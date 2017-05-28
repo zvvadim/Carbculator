@@ -1,6 +1,7 @@
 package com.shakenbeer.nutrition.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +39,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Menu menu;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {
         switch (item.getItemId()) {
             case R.id.navigation_calendar:
@@ -94,11 +97,6 @@ public class MainActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
 
         showCalendarUi();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -153,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void updateMenu() {
+    private void updateMenu() {
         switch (currentPage) {
             case CALENDAR:
                 showOption(R.id.add);
@@ -175,19 +173,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showCalendarUi() {
+    private void showCalendarUi() {
         CalendarView calendarView = new CalendarView(this);
         callbacks = calendarView;
         container.replace(calendarView);
     }
 
-    public void showFoodListUi() {
+    private void showFoodListUi() {
         FoodListView foodListView = new FoodListView(this);
         callbacks = foodListView;
         container.replace(foodListView);
     }
 
-    public void showStatisticUi() {
+    private void showStatisticUi() {
         StatisticsView statisticsView = new StatisticsView(this);
         callbacks = statisticsView;
         container.replace(statisticsView);
@@ -196,12 +194,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateCurrentPage(int page) {
         currentPage = page;
         updateMenu();
-    }
-
-    private void clearContent() {
-        if (container.getChildAt(0) != null) {
-            container.removeViewAt(0);
-        }
     }
 
     @Override
@@ -255,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
@@ -301,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* Checks if external storage is available for read and write */
-    public boolean isExternalStorageWritable() {
+    private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
@@ -314,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         public static final String CARBCULATOR_REPORT_CSV = "carbculator_report.csv";
         private volatile String dir;
 
-        private Context context;
+        private final Context context;
         private String errorDescription;
 
         public AsyncExportToCsv(Context ctx) {
@@ -327,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
                             .equals(Environment.getExternalStorageState());
         }
 
-        protected File getCarbculatorStorageDir() {
+        File getCarbculatorStorageDir() {
 
             File path = null;
 
@@ -370,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            @SuppressLint("SimpleDateFormat")
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
             File path = getCarbculatorStorageDir();
@@ -394,10 +387,10 @@ public class MainActivity extends AppCompatActivity {
                     csvWrite.writeNext(
                             sdf.format(meal.getDate()),
                             String.valueOf(en[meal.getNumber()]),
-                            String.format("%.1f", meal.getKcal()),
-                            String.format("%.1f", meal.getProtein()),
-                            String.format("%.1f", meal.getFat()),
-                            String.format("%.1f", meal.getCarbs()));
+                            String.format(Locale.getDefault(), "%.1f", meal.getKcal()),
+                            String.format(Locale.getDefault(), "%.1f", meal.getProtein()),
+                            String.format(Locale.getDefault(), "%.1f", meal.getFat()),
+                            String.format(Locale.getDefault(), "%.1f", meal.getCarbs()));
                 }
 
             } catch (IOException e) {
@@ -468,11 +461,11 @@ public class MainActivity extends AppCompatActivity {
 
     ///////// From old version - import/export foods list /////////
 
-    public static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
+    private static final String CARBCULATOR_FOODCATALOG_CSV = "carbculator_food_catalog.csv";
 
     private class AsyncExportFoodsToCsv extends AsyncTask<Void, Void, Boolean> {
 
-        private Context context;
+        private final Context context;
         private String errorDescription;
         private volatile String dir;
 
@@ -486,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
                             .equals(Environment.getExternalStorageState());
         }
 
-        protected File getCarbculatorStorageDir() {
+        File getCarbculatorStorageDir() {
             File path = null;
 
             dir = Environment.DIRECTORY_DOWNLOADS;
@@ -550,10 +543,10 @@ public class MainActivity extends AppCompatActivity {
 
                     csvWrite.writeNext(
                             food.getName(),
-                            String.format("%.1f", food.getProteinPerUnit()),
-                            String.format("%.1f", food.getFatPerUnit()),
-                            String.format("%.1f", food.getCarbsPerUnit()),
-                            String.format("%.1f", food.getKcalPerUnit()),
+                            String.format(Locale.getDefault(), "%.1f", food.getProteinPerUnit()),
+                            String.format(Locale.getDefault(), "%.1f", food.getFatPerUnit()),
+                            String.format(Locale.getDefault(), "%.1f", food.getCarbsPerUnit()),
+                            String.format(Locale.getDefault(), "%.1f", food.getKcalPerUnit()),
                             food.getUnitName(),
                             String.valueOf(food.getUnit()));
                 }
@@ -616,7 +609,7 @@ public class MainActivity extends AppCompatActivity {
 
     private class AsyncImportFoodsFromCsv extends AsyncTask<Uri, Void, Boolean> {
 
-        private Context context;
+        private final Context context;
 
         public AsyncImportFoodsFromCsv(Context ctx) {
             context = ctx;
@@ -659,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     csvReader.close();
                     fileReader.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
             return true;

@@ -1,6 +1,7 @@
 package com.shakenbeer.nutrition.presentation;
 
 
+@SuppressWarnings("unused")
 public abstract class BasePresenter<T extends MvpView> implements MvpPresenter<T> {
 
     private T mvpView;
@@ -19,6 +20,7 @@ public abstract class BasePresenter<T extends MvpView> implements MvpPresenter<T
         return mvpView != null;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public T getMvpView() {
         return mvpView;
     }

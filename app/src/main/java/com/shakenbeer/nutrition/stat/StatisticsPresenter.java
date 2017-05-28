@@ -8,11 +8,11 @@ import com.shakenbeer.nutrition.model.Statistics;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class StatisticsPresenter extends StatisticsContract.Presenter {
+class StatisticsPresenter extends StatisticsContract.Presenter {
 
     private final NutritionLab2 nutritionLab2;
 
-    public StatisticsPresenter(NutritionLab2 nutritionLab2) {
+    StatisticsPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 

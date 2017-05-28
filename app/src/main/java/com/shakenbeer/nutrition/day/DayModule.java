@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class DayModule {
+class DayModule {
 
     private final MealListener mealListener;
 
-    public DayModule(MealListener mealListener) {
+    DayModule(MealListener mealListener) {
         this.mealListener = mealListener;
     }
 

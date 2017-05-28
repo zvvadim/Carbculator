@@ -7,11 +7,11 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class FoodListModule {
+class FoodListModule {
 
     private final FoodListener foodListener;
 
-    public FoodListModule(FoodListener foodListener) {
+    FoodListModule(FoodListener foodListener) {
         this.foodListener = foodListener;
     }
 

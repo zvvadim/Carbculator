@@ -15,14 +15,11 @@ import com.shakenbeer.nutrition.model.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Completable;
-import io.reactivex.CompletableEmitter;
-import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Single;
 
 /**
@@ -57,7 +54,7 @@ public class NutritionLab2 {
         return Single.just(getDays(page, offset));
     }
 
-    public List<Day> getDays(int page, int offset) {
+    private List<Day> getDays(int page, int offset) {
         Cursor cursor = storage.queryDays(page, offset);
         DataCursor<Day> dayCursor = new DataCursor<>(cursor, new DbDayGetter());
         List<Day> dayList = new ArrayList<>(cursor.getCount());
@@ -73,7 +70,7 @@ public class NutritionLab2 {
         return Single.just(getAllDays());
     }
 
-    public List<Day> getAllDays() {
+    private List<Day> getAllDays() {
         Cursor cursor = storage.queryDays();
         DataCursor<Day> dayCursor = new DataCursor<>(cursor, new DbDayGetter());
         List<Day> dayList = new ArrayList<>(cursor.getCount());
@@ -89,7 +86,7 @@ public class NutritionLab2 {
         return Single.just(getMeals(day));
     }
 
-    public List<Meal> getMeals(Day day) {
+    private List<Meal> getMeals(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
         DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
         List<Meal> list = new ArrayList<>();
@@ -121,7 +118,7 @@ public class NutritionLab2 {
         return Single.just(getComponents(meal));
     }
 
-    public List<Component> getComponents(Meal meal) {
+    private List<Component> getComponents(Meal meal) {
         Cursor cursor = storage.queryComponents(meal);
         DataCursor<Component> componentCursor = new DataCursor<>(cursor, new DbComponentGetter());
         List<Component> list = new ArrayList<>();
@@ -139,7 +136,7 @@ public class NutritionLab2 {
         return Single.just(getFood(foodId));
     }
 
-    public Food getFood(long foodId) {
+    private Food getFood(long foodId) {
         Cursor cursor = storage.queryFood(foodId);
         DataCursor<Food> foodCursor = new DataCursor<>(cursor, new DbFoodGetter());
         if (foodCursor.moveToFirst()) {
@@ -153,7 +150,7 @@ public class NutritionLab2 {
         return Single.just(getFoods(page, offset));
     }
 
-    public List<Food> getFoods(int page, int offset) {
+    private List<Food> getFoods(int page, int offset) {
         Cursor cursor = storage.queryFoods(page, offset);
         return getFoods(cursor);
     }
@@ -181,7 +178,7 @@ public class NutritionLab2 {
         return Single.fromCallable(() -> saveFood(food));
     }
 
-    public long saveFood(Food food) {
+    private long saveFood(Food food) {
         if (food.getId() < 0) {
             return storage.insertFood(food);
         } else {
@@ -202,7 +199,7 @@ public class NutritionLab2 {
         return Single.fromCallable(() -> saveEating(meal));
     }
 
-    public long saveEating(Meal meal) {
+    private long saveEating(Meal meal) {
         if (meal.getId() < 0) {
             return storage.insertEating(meal);
         } else {
@@ -234,7 +231,7 @@ public class NutritionLab2 {
         return Completable.fromRunnable(() -> deleteEating(meal));
     }
 
-    public void deleteEating(Meal meal) {
+    private void deleteEating(Meal meal) {
         storage.deleteComponents(meal);
         storage.deleteEating(meal);
     }

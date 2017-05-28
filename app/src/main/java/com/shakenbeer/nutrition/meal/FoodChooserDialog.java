@@ -3,6 +3,7 @@ package com.shakenbeer.nutrition.meal;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -29,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 //TODO should be refactored with MVP and PAGINATION and proper Rx SEARCH
 public class FoodChooserDialog extends DialogFragment {
 
-    public interface Callbacks {
+    interface Callbacks {
         void onItemSelected(Food food);
     }
 
@@ -50,6 +51,7 @@ public class FoodChooserDialog extends DialogFragment {
         nutritionLab2 = CarbculatorApplication.get(getActivity()).getComponent().nutritionLab2();
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -98,15 +100,6 @@ public class FoodChooserDialog extends DialogFragment {
                 });
 
         return builder.create();
-    }
-    
-
-    public void setFoodArrayAdapter(ArrayAdapter<Food> foodArrayAdapter) {
-        this.foodArrayAdapter = foodArrayAdapter;
-    }
-
-    public void setCallbacks(Callbacks callbacks) {
-        this.callbacks = callbacks;
     }
 
 }

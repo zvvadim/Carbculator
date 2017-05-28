@@ -16,15 +16,15 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MealPresenter extends MealContract.Presenter {
+class MealPresenter extends MealContract.Presenter {
 
     private final NutritionLab2 nutritionLab2;
     private Meal meal;
     private List<Component> components;
-    private List<Component> toDelete = new ArrayList<>();
+    private final List<Component> toDelete = new ArrayList<>();
 
     @Inject
-    public MealPresenter(NutritionLab2 nutritionLab2) {
+    MealPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 

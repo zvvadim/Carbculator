@@ -7,7 +7,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class FoodModule {
+class FoodModule {
 
     @Provides
     @FeatureScope

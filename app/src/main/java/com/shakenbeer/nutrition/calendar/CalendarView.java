@@ -29,12 +29,14 @@ public class CalendarView extends RecyclerView implements CalendarContract.View,
     private static final int NEW_MEAL_REQUEST_CODE = 9526;
     private static final int EXISTING_DAY_REQUEST_CODE = 4945;
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     CalendarContract.Presenter presenter;
+    @SuppressWarnings("WeakerAccess")
     @Inject
     DayAdapter adapter;
 
-    private Activity activity;
+    private final Activity activity;
 
     public CalendarView(Activity context) {
         super(context);

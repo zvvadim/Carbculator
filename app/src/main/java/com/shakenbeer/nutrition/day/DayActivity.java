@@ -26,8 +26,10 @@ public class DayActivity extends AppCompatActivity implements DayContract.View {
 
     public static final String DAY_EXTRA = "com.shakenbeer.nutrition.day.dayExtra";
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     DayContract.Presenter presenter;
+    @SuppressWarnings("WeakerAccess")
     @Inject
     MealAdapter adapter;
     private ActivityDayBinding binding;

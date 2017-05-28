@@ -7,12 +7,12 @@ import com.shakenbeer.nutrition.model.Food;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class FoodPresenter extends FoodContract.Presenter {
+class FoodPresenter extends FoodContract.Presenter {
 
     private final NutritionLab2 nutritionLab2;
     private Food food;
 
-    public FoodPresenter(NutritionLab2 nutritionLab2) {
+    FoodPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 

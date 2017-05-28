@@ -21,14 +21,8 @@ import javax.inject.Inject;
 
 public class FoodActivity extends AppCompatActivity implements FoodContract.View, FoodListener {
 
-    public static final String FOOD_EXTRA = "com.shakenbeer.nutrition.food.foodExtra";
+    private static final String FOOD_EXTRA = "com.shakenbeer.nutrition.food.foodExtra";
     public static final String FOOD_ID_EXTRA = "com.shakenbeer.nutrition.food.foodIdExtra";
-
-    public static void start(Context context, Food food) {
-        Intent starter = new Intent(context, FoodActivity.class);
-        starter.putExtra(FOOD_EXTRA, food);
-        context.startActivity(starter);
-    }
 
     public static void startForResult(Activity activity, Food food, int requestCode) {
         Intent starter = new Intent(activity, FoodActivity.class);
@@ -36,6 +30,7 @@ public class FoodActivity extends AppCompatActivity implements FoodContract.View
         activity.startActivityForResult(starter, requestCode);
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     FoodContract.Presenter presenter;
 

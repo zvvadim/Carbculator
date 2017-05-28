@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class NutritionLab {
 
-    private Storage storage;
+    private final Storage storage;
 
     private volatile static NutritionLab instance;
 
@@ -38,23 +38,23 @@ public class NutritionLab {
 
     public DataCursor<Day> getDayCursor() {
         Cursor cursor = storage.queryDays();
-        return new DataCursor<Day>(cursor, new DbDayGetter());
+        return new DataCursor<>(cursor, new DbDayGetter());
     }
 
     public DataCursor<Food> getFoodCursor() {
         Cursor cursor = storage.queryFoods();
-        return new DataCursor<Food>(cursor, new DbFoodGetter());
+        return new DataCursor<>(cursor, new DbFoodGetter());
     }
 
     public DataCursor<Food> getFoodCursor(String startWith) {
         Cursor cursor = storage.queryFoods(startWith);
-        return new DataCursor<Food>(cursor, new DbFoodGetter());
+        return new DataCursor<>(cursor, new DbFoodGetter());
     }
 
     public List<Meal> getMeals(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
-        List<Meal> list = new ArrayList<Meal>();
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
+        List<Meal> list = new ArrayList<>();
 
         if (eatingCursor.moveToFirst()) {
             do {
@@ -67,8 +67,8 @@ public class NutritionLab {
 
     public List<Meal> getMeals() {
         Cursor cursor = storage.queryEatings();
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
-        List<Meal> list = new ArrayList<Meal>();
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
+        List<Meal> list = new ArrayList<>();
 
         if (eatingCursor.moveToFirst()) {
             do {
@@ -81,8 +81,8 @@ public class NutritionLab {
 
     public List<Component> getComponents(Meal meal) {
         Cursor cursor = storage.queryComponents(meal);
-        DataCursor<Component> componentCursor = new DataCursor<Component>(cursor, new DbComponentGetter());
-        List<Component> list = new ArrayList<Component>();
+        DataCursor<Component> componentCursor = new DataCursor<>(cursor, new DbComponentGetter());
+        List<Component> list = new ArrayList<>();
 
         if (componentCursor.moveToFirst()) {
             do {
@@ -95,9 +95,9 @@ public class NutritionLab {
 
     public List<Food> getFoods() {
         Cursor cursor = storage.queryFoods();
-        DataCursor<Food> foodCursor = new DataCursor<Food>(cursor, new DbFoodGetter());
+        DataCursor<Food> foodCursor = new DataCursor<>(cursor, new DbFoodGetter());
 
-        List<Food> list = new ArrayList<Food>();
+        List<Food> list = new ArrayList<>();
 
         if (foodCursor.moveToFirst()) {
             do {
@@ -108,6 +108,7 @@ public class NutritionLab {
         return list;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public long saveFood(Food food) {
         if (food.getId() < 0) {
             return storage.insertFood(food);
@@ -144,7 +145,7 @@ public class NutritionLab {
         storage.deleteComponent(component);
     }
 
-    public void deleteEating(Meal meal) {
+    private void deleteEating(Meal meal) {
         storage.deleteComponents(meal);
         storage.deleteEating(meal);
 
@@ -152,7 +153,7 @@ public class NutritionLab {
 
     public void deleteDay(Day day) {
         Cursor cursor = storage.queryEatings(day.getDate());
-        DataCursor<Meal> eatingCursor = new DataCursor<Meal>(cursor, new DbEatingGetter());
+        DataCursor<Meal> eatingCursor = new DataCursor<>(cursor, new DbEatingGetter());
         if (eatingCursor.moveToFirst()) {
             do {
                 deleteEating(eatingCursor.get());

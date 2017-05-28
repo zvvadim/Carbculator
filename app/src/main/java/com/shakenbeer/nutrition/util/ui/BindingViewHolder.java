@@ -10,7 +10,7 @@ public class BindingViewHolder extends RecyclerView.ViewHolder implements View.O
     public final ViewDataBinding binding;
     private final ClickListener clickListener;
 
-    public BindingViewHolder(ViewDataBinding binding, @NonNull ClickListener clickListener) {
+    BindingViewHolder(ViewDataBinding binding, @NonNull ClickListener clickListener) {
         super(binding.getRoot());
         binding.getRoot().setOnClickListener(this);
         this.binding = binding;
@@ -23,11 +23,12 @@ public class BindingViewHolder extends RecyclerView.ViewHolder implements View.O
     }
 
     //override in case want to use shared views in transition
+    @SuppressWarnings("WeakerAccess")
     public View[] sharedViews() {
         return new View[]{};
     }
 
-    public interface ClickListener {
+    interface ClickListener {
         void onHolderViewClick(int position, View... shared);
     }
 }

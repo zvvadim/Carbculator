@@ -7,23 +7,23 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class MealModule {
+class MealModule {
 
     private final ComponentListener componentListener;
 
-    public MealModule(ComponentListener componentListener) {
+    MealModule(ComponentListener componentListener) {
         this.componentListener = componentListener;
     }
 
     @FeatureScope
     @Provides
-    public ComponentListener provideComponentDeleteListener() {
+    ComponentListener provideComponentDeleteListener() {
         return componentListener;
     }
 
     @FeatureScope
     @Provides
-    public MealContract.Presenter provideMealPresenter(NutritionLab2 nutritionLab2) {
+    MealContract.Presenter provideMealPresenter(NutritionLab2 nutritionLab2) {
         return new MealPresenter(nutritionLab2);
     }
 }

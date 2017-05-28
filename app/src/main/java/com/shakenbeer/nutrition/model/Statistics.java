@@ -2,11 +2,11 @@ package com.shakenbeer.nutrition.model;
 
 
 public class Statistics {
-    int totalDays = 0;
-    float totalProtein = 0;
-    float totalFat = 0;
-    float totalCarbs = 0;
-    float totalKcal = 0;
+    private int totalDays = 0;
+    private float totalProtein = 0;
+    private float totalFat = 0;
+    private float totalCarbs = 0;
+    private float totalKcal = 0;
 
     public int getTotalDays() {
         return totalDays;

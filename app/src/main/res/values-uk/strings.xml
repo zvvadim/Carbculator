@@ -12,12 +12,7 @@
     <string name="fat_per_unit">Жирів на одиницю виміру</string>
     <string name="kcal_per_unit">Ккал на одиницю виміру</string>
     <string name="ingredient_grams">Об\'єм продукту</string>
-    <string name="add_eating">Додати прийом їжі</string>
-    <string name="add_food">Додати продукт</string>
-    <string name="add_food_to_list">Додати продукт до списку</string>
     <string name="add">Додати</string>
-    <string name="delete_eating">Видалити прийом їжі</string>
-    <string name="delete_day">Видалити день</string>
     <string name="delete_food">Видалити продукт</string>
     <string name="new_eating">Новий прийом їжі</string>
     <string name="save">Зберегти</string>
@@ -38,13 +33,7 @@
     </string-array>
 
     <string name="pfc_ratio_colon">"БЖВ: "</string>
-    <string name="language">Мова</string>
 
-    <string-array name="languages">
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
     <string-array name="init_food">
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Рис білий, довгозернистий', 7.13, 0.66, 80, 365, 'грамів')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Куряча грудка', 23.6, 1.9, 0.4, 165, 'грамів')"</item>
@@ -71,7 +60,6 @@
     <string name="exporting">Експортуємо…</string>
     <string name="importing">Імпортуємо…</string>
 
-    <string name="dialog_action_open">Відкрити</string>
     <string name="dialog_message_export_success">Ви можете знайти звіт у</string>
     <string name="dialog_message_export_failure">Помилка експорту:</string>
     <string name="dialog_message_no_storage">Відсутнє загальне місце для зберігання</string>
@@ -82,7 +70,6 @@
 
     <!-- Carbculator 2 -->
     <string name="calendar">Календар</string>
-    <string name="settings">Налаштування</string>
 
     <string name="kcal">"Ккал: %.1f"</string>
     <string name="pfc_ratio">"БЖВ: %s"</string>

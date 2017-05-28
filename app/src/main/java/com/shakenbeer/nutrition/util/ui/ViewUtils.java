@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+@SuppressWarnings("ALL")
 public class ViewUtils {
     ViewUtils() {
     }

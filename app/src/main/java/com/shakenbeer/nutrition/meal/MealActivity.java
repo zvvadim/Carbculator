@@ -32,16 +32,18 @@ import javax.inject.Inject;
 
 public class MealActivity extends AppCompatActivity implements MealContract.View {
 
-    public static final String MEAL_EXTRA = "com.shakenbeer.nutrition.meal.mealExtra";
+    private static final String MEAL_EXTRA = "com.shakenbeer.nutrition.meal.mealExtra";
     public static final String MEAL_ID_EXTRA = "com.shakenbeer.nutrition.meal.mealIdExtra";
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     ComponentAdapter adapter;
+    @SuppressWarnings("WeakerAccess")
     @Inject
     MealContract.Presenter presenter;
     private ActivityMealBinding binding;
 
-    private ComponentListener componentListener = new ComponentListener() {
+    private final ComponentListener componentListener = new ComponentListener() {
         @Override
         public void onDelete(int position) {
             presenter.onRemoveComponent(adapter.getItem(position), position);
@@ -59,14 +61,14 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
         }
     };
 
-    private DatePickerDialog.OnDateSetListener dateSetListener =
+    private final DatePickerDialog.OnDateSetListener dateSetListener =
             new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                     presenter.onMealDateSelected(year, month, dayOfMonth);
                 }
             };
-    private TimePickerDialog.OnTimeSetListener timeSetListener =
+    private final TimePickerDialog.OnTimeSetListener timeSetListener =
             new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

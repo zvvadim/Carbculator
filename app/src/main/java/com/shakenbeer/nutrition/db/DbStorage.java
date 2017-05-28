@@ -29,28 +29,28 @@ import com.shakenbeer.nutrition.model.Storage;
  */
 public class DbStorage extends SQLiteOpenHelper implements Storage {
 
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "nutrition.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "nutrition.db";
 
-    public static final String _ID = "_id";
-    public static final String SQLITE_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String SQLITE_DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
+    static final String _ID = "_id";
+    static final String SQLITE_DATE_FORMAT = "yyyy-MM-dd";
+    static final String SQLITE_DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
     
-    private Context context;
+    private final Context context;
 
     private static final String DATE_FROM_EATING_DATE = "date(" + EatingTable.COLUMN_DATE + ")";
 
-    public static final String CREATE_TABLE_FOOD = "CREATE TABLE " + FoodTable.TABLE_NAME + " (" + FoodTable._ID
+    private static final String CREATE_TABLE_FOOD = "CREATE TABLE " + FoodTable.TABLE_NAME + " (" + FoodTable._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FoodTable.COLUMN_NAME + " TEXT, " + FoodTable.COLUMN_PROTEIN
             + " REAL, " + FoodTable.COLUMN_CARBS + " REAL, " + FoodTable.COLUMN_FAT + " REAL, " + FoodTable.COLUMN_KCAL
             + " REAL, " + FoodTable.COLUMN_UNIT + " INTEGER DEFAULT 100, " + FoodTable.COLUMN_DELETED
             + " INTEGER DEFAULT 0, " + FoodTable.COLUMN_UNIT_NAME + " TEXT)";
 
-    public static final String CREATE_TABLE_EATING = "CREATE TABLE " + EatingTable.TABLE_NAME + " (" + EatingTable._ID
+    private static final String CREATE_TABLE_EATING = "CREATE TABLE " + EatingTable.TABLE_NAME + " (" + EatingTable._ID
             + " INTEGER PRIMARY KEY AUTOINCREMENT, " + EatingTable.COLUMN_NUMBER + " INTEGER, " + EatingTable.COLUMN_DATE
             + " DATETIME)";
 
-    public static final String CREATE_TABLE_COMPONENT = "CREATE TABLE " + ComponentTable.TABLE_NAME + " ("
+    private static final String CREATE_TABLE_COMPONENT = "CREATE TABLE " + ComponentTable.TABLE_NAME + " ("
             + ComponentTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ComponentTable.COLUMN_EATING_ID
             + " INTEGER, " + ComponentTable.COLUMN_FOOD_ID + " INTEGER, " + ComponentTable.COLUMN_GRAMS
             + " INTEGER, FOREIGN KEY(" + ComponentTable.COLUMN_EATING_ID + ") REFERENCES " + EatingTable.TABLE_NAME
@@ -80,7 +80,8 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
         db.execSQL(CREATE_TABLE_COMPONENT);
         
         String[] initFood = context.getResources().getStringArray(R.array.init_food);
-        
+
+        //noinspection ForLoopReplaceableByForEach
         for (int i = 0; i < initFood.length; i++) {
             db.execSQL(initFood[i]);
         } 
@@ -100,36 +101,29 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
                 componentAmount(FoodTable.COLUMN_PROTEIN), componentAmount(FoodTable.COLUMN_CARBS),
                 componentAmount(FoodTable.COLUMN_FAT), componentAmount(FoodTable.COLUMN_KCAL) };
 
-        String groupBy = DATE_FROM_EATING_DATE;
-
         String sortOrder = DATE_FROM_EATING_DATE + " desc";
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, null, sortOrder);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, null, null, DATE_FROM_EATING_DATE, null, sortOrder);
     }
 
     @Override
     public Cursor queryFoods() {
-        Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, null, FoodTable.COLUMN_DELETED + " = 0",
+        return getReadableDatabase().query(FoodTable.TABLE_NAME, null, FoodTable.COLUMN_DELETED + " = 0",
                 null, null, null, FoodTable.COLUMN_NAME);
-        return cursor;
     }
 
     @Override
     public Cursor queryFoods(String startWith) {
         String where = FoodTable.COLUMN_DELETED + " = 0 and " + FoodTable.COLUMN_NAME + " LIKE '" + startWith + "%'";
-        Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, null, where,
+        return getReadableDatabase().query(FoodTable.TABLE_NAME, null, where,
                 null, null, null, FoodTable.COLUMN_NAME);
-        return cursor;
     }
 
     @Override
     public Cursor queryFood(long foodId) {
         String where = FoodTable.COLUMN_DELETED + " = 0 and " + FoodTable.FULL_ID + " = " + foodId;
-        Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, null, where,
+        return getReadableDatabase().query(FoodTable.TABLE_NAME, null, where,
                 null, null, null, FoodTable.COLUMN_NAME);
-        return cursor;
     }
 
     @Override
@@ -150,9 +144,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
         String dateString = DateFormat.format(SQLITE_DATE_FORMAT, date).toString();
         String having = "date(" + EatingTable.COLUMN_DATE + ") = date('" + dateString + "')";
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, having, sortOrder);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, having, sortOrder);
     }
 
     @Override
@@ -170,9 +162,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
         String sortOrder = EatingTable.COLUMN_DATE;
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, null, sortOrder);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, null, sortOrder);
     }
 
     @Override
@@ -186,9 +176,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
         String selection = ComponentTable.COLUMN_EATING_ID + " = " + meal.getId();
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, selection, null, null, null, null);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, selection, null, null, null, null);
     }
 
     private String componentAmount(String component) {
@@ -250,23 +238,18 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
                 componentAmount(FoodTable.COLUMN_PROTEIN), componentAmount(FoodTable.COLUMN_CARBS),
                 componentAmount(FoodTable.COLUMN_FAT), componentAmount(FoodTable.COLUMN_KCAL) };
 
-        String groupBy = DATE_FROM_EATING_DATE;
-
         String sortOrder = DATE_FROM_EATING_DATE + " desc";
 
         String limit = page * offset + "," + offset;
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, null, sortOrder, limit);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, null, null, DATE_FROM_EATING_DATE, null, sortOrder, limit);
 
     }
 
     @Override
     public Cursor queryFoods(int page, int offset) {
-        Cursor cursor = getReadableDatabase().query(FoodTable.TABLE_NAME, null, FoodTable.COLUMN_DELETED + " = 0",
+        return getReadableDatabase().query(FoodTable.TABLE_NAME, null, FoodTable.COLUMN_DELETED + " = 0",
                 null, null, null, FoodTable.COLUMN_NAME, page * offset + "," + offset);
-        return cursor;
     }
 
     @Override
@@ -284,9 +267,7 @@ public class DbStorage extends SQLiteOpenHelper implements Storage {
 
         String having = EatingTable.FULL_ID + " = " + id;
 
-        Cursor cursor = queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, having, null);
-
-        return cursor;
+        return queryBuilder.query(getReadableDatabase(), columns, null, null, groupBy, having, null);
     }
 
     @Override

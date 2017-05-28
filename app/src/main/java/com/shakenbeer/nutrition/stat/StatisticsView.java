@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -21,10 +18,11 @@ import javax.inject.Inject;
 public class StatisticsView extends RelativeLayout implements StatisticsContract.View,
         MainActivity.Callbacks {
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     StatisticsContract.Presenter presenter;
 
-    private StatisticsViewBinding binding;
+    private final StatisticsViewBinding binding;
 
     public StatisticsView(Context context) {
         super(context);

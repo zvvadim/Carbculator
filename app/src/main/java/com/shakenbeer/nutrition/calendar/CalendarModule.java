@@ -7,7 +7,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class CalendarModule {
+class CalendarModule {
 
     @Provides
     @FeatureScope

@@ -9,11 +9,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class FoodListPresenter extends FoodListContract.Presenter {
+class FoodListPresenter extends FoodListContract.Presenter {
 
     private static final int OFFSET = 100;
     private final NutritionLab2 nutritionLab2;
@@ -21,7 +19,7 @@ public class FoodListPresenter extends FoodListContract.Presenter {
     private boolean everythingIsHere = false;
 
     @Inject
-    public FoodListPresenter(NutritionLab2 nutritionLab2) {
+    FoodListPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 
@@ -31,7 +29,7 @@ public class FoodListPresenter extends FoodListContract.Presenter {
         nutritionLab2.getFoodsRx(page, OFFSET)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(foods -> processFoods(foods), throwable
+                .subscribe(this::processFoods, throwable
                         -> getMvpView().showError(throwable.getLocalizedMessage()));
     }
 

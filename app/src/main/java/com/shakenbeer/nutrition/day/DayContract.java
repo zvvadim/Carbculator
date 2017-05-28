@@ -8,7 +8,7 @@ import com.shakenbeer.nutrition.presentation.MvpView;
 
 import java.util.List;
 
-public interface DayContract {
+interface DayContract {
 
     interface View extends MvpView {
         void showDay(Day day);
@@ -16,6 +16,7 @@ public interface DayContract {
         void showMealUi(Meal meal);
         void showError(String message);
         void showMealRemoved(int position);
+        @SuppressWarnings("unused")
         void showPreviousUi();
     }
 

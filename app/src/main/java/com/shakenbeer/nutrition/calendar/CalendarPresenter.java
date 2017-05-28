@@ -15,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 
-public class CalendarPresenter extends CalendarContract.Presenter {
+class CalendarPresenter extends CalendarContract.Presenter {
 
     private static final int OFFSET = 100;
     private final NutritionLab2 nutritionLab2;
@@ -23,7 +23,7 @@ public class CalendarPresenter extends CalendarContract.Presenter {
     private boolean everythingIsHere = false;
 
     @Inject
-    public CalendarPresenter(NutritionLab2 nutritionLab2) {
+    CalendarPresenter(NutritionLab2 nutritionLab2) {
         this.nutritionLab2 = nutritionLab2;
     }
 

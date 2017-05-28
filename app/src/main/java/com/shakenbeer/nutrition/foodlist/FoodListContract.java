@@ -22,6 +22,7 @@ public interface FoodListContract {
     abstract class Presenter extends BasePresenter<View> {
         abstract void obtainFoods();
         abstract void onFoodClick(Food food);
+        @SuppressWarnings("unused")
         abstract void onNewFoodClick();
         abstract void onRemoveFood(int position, Food food);
         abstract void onFoodUpdated(long foodId, List<Food> foods);

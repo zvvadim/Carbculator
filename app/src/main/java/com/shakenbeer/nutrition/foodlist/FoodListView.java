@@ -27,12 +27,14 @@ public class FoodListView extends RecyclerView implements FoodListContract.View,
     private static final int NEW_FOOD_REQUEST_CODE = 3844;
     private static final int EXISTING_FOOD_REQUEST_CODE = 7762;
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     FoodListContract.Presenter presenter;
+    @SuppressWarnings("WeakerAccess")
     @Inject
     FoodAdapter adapter;
 
-    private Activity activity;
+    private final Activity activity;
 
     public FoodListView(Activity context) {
         super(context);
