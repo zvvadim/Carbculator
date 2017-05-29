@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Carbculator</string>
-    <string name="protein_colon">"Білок: "</string>
+    <string name="protein_colon">"Білки: "</string>
     <string name="carbs_colon">"Вуглеводи: "</string>
     <string name="fat_colon">"Жири: "</string>
     <string name="kcal_colon">"Ккал: "</string>
@@ -74,7 +74,7 @@
     <string name="kcal">"Ккал: %.1f"</string>
     <string name="pfc_ratio">"БЖВ: %s"</string>
     <string name="carbs">"Вуглеводи: %.1f"</string>
-    <string name="protein">"Біок: %.1f"</string>
+    <string name="protein">"Білки: %.1f"</string>
     <string name="fat">"Жири: %.1f"</string>
     <string name="delete_meal">Видалити прийом їжі</string>
     <string name="permission_button_accept">Дозволити</string>

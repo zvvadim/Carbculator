@@ -84,28 +84,28 @@
                 android:id="@+id/protein_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="30"
                 android:text="@{@string/protein(meal.protein)}"
                 android:textSize="@dimen/text_size_small"
-                tools:text="@string/protein_colon" />
+                tools:text="Білки 15,7" />
 
             <TextView
                 android:id="@+id/fat_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="30"
                 android:text="@{@string/fat(meal.fat)}"
                 android:textSize="@dimen/text_size_small"
-                tools:text="@string/fat_colon" />
+                tools:text="Жири: 6,2" />
 
             <TextView
                 android:id="@+id/carbs_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="40"
                 android:text="@{@string/carbs(meal.carbs)}"
                 android:textSize="@dimen/text_size_small"
-                tools:text="@string/carbs_colon" />
+                tools:text="Вуглеводи 104,9" />
         </LinearLayout>
 
     </RelativeLayout>
