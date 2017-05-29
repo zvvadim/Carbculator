@@ -10,7 +10,7 @@
     <string name="protein_per_unit">Белка на единицу измерения</string>
     <string name="carbs_per_unit">Углеводов на единицу измерения</string>
     <string name="fat_per_unit">Жира на единицу измерения</string>
-    <string name="kcal_per_unit">Ккал на ежиницу измерения</string>
+    <string name="kcal_per_unit">Ккал на единицу измерения</string>
     <string name="ingredient_grams">Объем продукта</string>
     <string name="add">Добавить</string>
     <string name="delete_food">Удалить продукт</string>
