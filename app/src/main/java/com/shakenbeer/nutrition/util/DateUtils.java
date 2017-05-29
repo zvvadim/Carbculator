@@ -9,8 +9,8 @@ import java.util.Locale;
 public class DateUtils {
     private static final DateFormat longDate =
             DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
-    private static final DateFormat shortDate =
-            DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+    private static final DateFormat mediumDate =
+            DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault());
     private static final DateFormat shortTime =
             DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
 
@@ -18,8 +18,8 @@ public class DateUtils {
         return longDate.format(date);
     }
 
-    public static String shortDate(Date date) {
-        return shortDate.format(date);
+    public static String mediumDate(Date date) {
+        return mediumDate.format(date);
     }
 
     public static String shortTime(Date date) {

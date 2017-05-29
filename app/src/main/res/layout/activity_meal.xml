@@ -13,6 +13,7 @@
 
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -59,11 +60,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:drawableRight="@drawable/ic_menu_down_black_24dp"
                 android:drawableEnd="@drawable/ic_menu_down_black_24dp"
+                android:drawableRight="@drawable/ic_menu_down_black_24dp"
                 android:gravity="center_vertical"
-                android:text="@{DateUtils.shortDate(meal.getDate())}"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:text="@{DateUtils.mediumDate(meal.getDate())}"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/eating_time_button"
@@ -71,12 +75,20 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:drawableRight="@drawable/ic_menu_down_black_24dp"
                 android:drawableEnd="@drawable/ic_menu_down_black_24dp"
+                android:drawableRight="@drawable/ic_menu_down_black_24dp"
                 android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:text="@{DateUtils.shortTime(meal.getDate())}"
-                android:textAppearance="@style/TextAppearance.AppCompat" />
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/gray" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/components_recyclerView"

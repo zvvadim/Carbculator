@@ -214,6 +214,7 @@ public class MealActivity extends AppCompatActivity implements MealContract.View
     @Override
     public void showNewComponent(Component component) {
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
+        binding.componentsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
     }
 
     @Override
