@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.shakenbeer.nutrition.util.DateUtils" />
+
+        <variable
+            name="meal"
+            type="com.shakenbeer.nutrition.model.Meal" />
+    </data>
+
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_tiny">
+
+        <TextView
+            android:id="@+id/new_eating_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:background="@color/eating_caption_background"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_tiny"
+            android:text="@{meal.id > -1 ? @stringArray/eating_names[meal.number] : @string/new_eating}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            tools:text="@string/new_eating" />
+
+        <Spinner
+            android:id="@+id/eating_name_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/eating_caption_background" />
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium">
+
+            <TextView
+                android:id="@+id/eating_date_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_menu_down_black_24dp"
+                android:drawableRight="@drawable/ic_menu_down_black_24dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:text="@{DateUtils.mediumDate(meal.getDate())}"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/eating_time_button"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_menu_down_black_24dp"
+                android:drawableRight="@drawable/ic_menu_down_black_24dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
+                android:text="@{DateUtils.shortTime(meal.getDate())}"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/gray" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/components_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:descendantFocusability="beforeDescendants"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium">
+
+            <Button
+                android:id="@+id/add_component_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/add" />
+
+            <Button
+                android:id="@+id/save_eating_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/save" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

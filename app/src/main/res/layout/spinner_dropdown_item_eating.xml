@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:id="@+id/eating_name_dropdown"
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
     style="?android:attr/spinnerDropDownItemStyle"
-    android:singleLine="true"
+    android:maxLines="1"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:ellipsize="marquee"

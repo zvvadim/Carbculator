@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="food"
+            type="com.shakenbeer.nutrition.model.Food" />
+
+        <variable
+            name="listener"
+            type="com.shakenbeer.nutrition.foodlist.FoodListener" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:paddingBottom="@dimen/margin_tiny"
+        android:paddingLeft="@dimen/margin_medium"
+        android:paddingRight="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_tiny">
+
+        <TextView
+            android:id="@+id/name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/food_caption_background"
+            android:gravity="center"
+            android:paddingBottom="@dimen/margin_tiny"
+            android:text="@{food.name}"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold"
+            tools:text="13 березня 2017 р." />
+
+        <ImageButton
+            android:id="@+id/delete_food"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/name_text_view"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/delete_food"
+            android:src="@android:drawable/ic_menu_delete" />
+
+        <LinearLayout
+            android:id="@+id/summary_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_text_view"
+            android:layout_toLeftOf="@id/delete_food"
+            android:layout_toStartOf="@id/delete_food"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_tiny"
+            android:paddingTop="@dimen/margin_tiny">
+
+            <TextView
+                android:id="@+id/kcal_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@{@string/kcal(food.kcalPerUnit)}"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="@string/kcal_colon" />
+
+            <TextView
+                android:id="@+id/pfc_ratio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@{@string/pfc_ratio(food.pfcRatio)}"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="@string/pfc_ratio_colon" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/summary_linear_layout"
+            android:layout_toLeftOf="@id/delete_food"
+            android:layout_toStartOf="@id/delete_food"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/protein_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{@string/protein(food.proteinPerUnit)}"
+                android:textSize="@dimen/text_size_small"
+                tools:text="@string/protein_colon" />
+
+            <TextView
+                android:id="@+id/fat_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{@string/fat(food.fatPerUnit)}"
+                android:textSize="@dimen/text_size_small"
+                tools:text="@string/fat_colon" />
+
+            <TextView
+                android:id="@+id/carbs_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{@string/carbs(food.carbsPerUnit)}"
+                android:textSize="@dimen/text_size_small"
+                tools:text="@string/carbs_colon" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

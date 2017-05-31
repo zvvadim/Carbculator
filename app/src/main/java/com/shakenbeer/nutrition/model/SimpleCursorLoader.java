@@ -31,6 +31,7 @@ import android.database.Cursor;
  * @author cristian
  */
 
+@SuppressWarnings("ALL")
 public abstract class SimpleCursorLoader extends AsyncTaskLoader<Cursor> {
     private Cursor mCursor;
  

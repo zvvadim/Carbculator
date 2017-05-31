@@ -10,14 +10,9 @@
     <string name="protein_per_unit">Белка на единицу измерения</string>
     <string name="carbs_per_unit">Углеводов на единицу измерения</string>
     <string name="fat_per_unit">Жира на единицу измерения</string>
-    <string name="kcal_per_unit">Ккал на ежиницу измерения</string>
+    <string name="kcal_per_unit">Ккал на единицу измерения</string>
     <string name="ingredient_grams">Объем продукта</string>
-    <string name="add_eating">Добавить прием пищи</string>
-    <string name="add_food">Добавить продукт</string>
-    <string name="add_food_to_list">Добавить продукт в список</string>
     <string name="add">Добавить</string>
-    <string name="delete_eating">Удалить прием пищи</string>
-    <string name="delete_day">Удалить день</string>
     <string name="delete_food">Удалить продукт</string>
     <string name="new_eating">Новый прием пищи</string>
     <string name="save">Сохранить</string>
@@ -37,14 +32,8 @@
         <item>Перекус</item>
     </string-array>
 
-    <string name="pfc_ratio">"БЖУ: "</string>
-    <string name="language">Язык</string>
+    <string name="pfc_ratio_colon">"БЖУ: "</string>
 
-    <string-array name="languages">
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
     <string-array name="init_food">
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Рис белый, длиннозернистый', 7.13, 0.66, 80, 365, 'грамм')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Куриная грудка', 23.6, 1.9, 0.4, 165, 'грамм')"</item>
@@ -66,7 +55,30 @@
     <string name="total_kcal">ККАЛ</string>
     <string name="total_ratio">БЖУ</string>
     <string name="per_day_statistics">СРЕД. ЗА ДЕНЬ</string>
-    <string name="export_to_csv">Экспорт. в CSV</string>
+    <string name="export_to_csv">Экспорт в CSV</string>
+    <string name="import_from_csv">Импорт из CSV</string>
     <string name="exporting">Экспортируем…</string>
+    <string name="importing">Импортируем…</string>
 
+    <string name="dialog_message_export_success">Вы можете найти отчет в</string>
+    <string name="dialog_message_export_failure">Ошибка экпорта:</string>
+    <string name="dialog_message_no_storage">Отуствует общее место для сохранения</string>
+    <string name="dialog_message_error_creating_directory">Папка не создана</string>
+
+    <string name="dialog_message_import_success">Импорт прошел успешно</string>
+    <string name="dialog_message_import_failure">Провал импорта. Используйте экспортированный файл как пример.</string>
+
+    <!-- Carbculator 2 -->
+    <string name="calendar">Календарь</string>
+
+    <string name="kcal">"Ккал: %.1f"</string>
+    <string name="pfc_ratio">"БЖУ: %s"</string>
+    <string name="carbs">"Углеводы: %.1f"</string>
+    <string name="protein">"Белки: %.1f"</string>
+    <string name="fat">"Жиры: %.1f"</string>
+    <string name="delete_meal">Удалить прием еды</string>
+    <string name="permission_button_accept">Позволить</string>
+    <string name="permission_button_deny">Запретить</string>
+    <string name="write_external_storage_request_title">Запись файлов</string>
+    <string name="write_external_storage_request_rationale">Нужно ваше разрешение на запиь файлов на устройстве.</string>
 </resources>

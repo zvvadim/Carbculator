@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Carbculator</string>
-    <string name="protein_colon">"Білок: "</string>
+    <string name="protein_colon">"Білки: "</string>
     <string name="carbs_colon">"Вуглеводи: "</string>
     <string name="fat_colon">"Жири: "</string>
     <string name="kcal_colon">"Ккал: "</string>
@@ -12,12 +12,7 @@
     <string name="fat_per_unit">Жирів на одиницю виміру</string>
     <string name="kcal_per_unit">Ккал на одиницю виміру</string>
     <string name="ingredient_grams">Об\'єм продукту</string>
-    <string name="add_eating">Додати прийом їжі</string>
-    <string name="add_food">Додати продукт</string>
-    <string name="add_food_to_list">Додати продукт до списку</string>
     <string name="add">Додати</string>
-    <string name="delete_eating">Видалити прийом їжі</string>
-    <string name="delete_day">Видалити день</string>
     <string name="delete_food">Видалити продукт</string>
     <string name="new_eating">Новий прийом їжі</string>
     <string name="save">Зберегти</string>
@@ -37,14 +32,8 @@
         <item>Перекус</item>
     </string-array>
 
-    <string name="pfc_ratio">"БЖВ: "</string>
-    <string name="language">Мова</string>
+    <string name="pfc_ratio_colon">"БЖВ: "</string>
 
-    <string-array name="languages">
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
     <string-array name="init_food">
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Рис білий, довгозернистий', 7.13, 0.66, 80, 365, 'грамів')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Куряча грудка', 23.6, 1.9, 0.4, 165, 'грамів')"</item>
@@ -66,7 +55,30 @@
     <string name="total_kcal">ККАЛ</string>
     <string name="total_ratio">БЖВ</string>
     <string name="per_day_statistics">СЕРЕД. ЗА ДЕНЬ</string>
-    <string name="export_to_csv">Експорт. до CSV</string>
-    <string name="exporting">Exporting...</string>
+    <string name="export_to_csv">Експорт до CSV</string>
+    <string name="import_from_csv">Імпорт з CSV</string>
+    <string name="exporting">Експортуємо…</string>
+    <string name="importing">Імпортуємо…</string>
 
+    <string name="dialog_message_export_success">Ви можете знайти звіт у</string>
+    <string name="dialog_message_export_failure">Помилка експорту:</string>
+    <string name="dialog_message_no_storage">Відсутнє загальне місце для зберігання</string>
+    <string name="dialog_message_error_creating_directory">Папку не створено</string>
+
+    <string name="dialog_message_import_success">Імпорт завершено</string>
+    <string name="dialog_message_import_failure">Помилка іспорту. Використовуйте експортоваий файл,як зразок.</string>
+
+    <!-- Carbculator 2 -->
+    <string name="calendar">Календар</string>
+
+    <string name="kcal">"Ккал: %.1f"</string>
+    <string name="pfc_ratio">"БЖВ: %s"</string>
+    <string name="carbs">"Вуглеводи: %.1f"</string>
+    <string name="protein">"Білки: %.1f"</string>
+    <string name="fat">"Жири: %.1f"</string>
+    <string name="delete_meal">Видалити прийом їжі</string>
+    <string name="permission_button_accept">Дозволити</string>
+    <string name="permission_button_deny">Заборонити</string>
+    <string name="write_external_storage_request_title">Запис файлів</string>
+    <string name="write_external_storage_request_rationale">Потрібен ваш дозвіл на запис файлів на вашому девайсі.</string>
 </resources>

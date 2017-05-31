@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Carbculator</string>
@@ -11,14 +12,9 @@
     <string name="fat_per_unit">Fat per unit</string>
     <string name="kcal_per_unit">Kcal per unit</string>
     <string name="ingredient_grams">Food amount</string>
-    <string name="add_eating">Add eating</string>
-    <string name="add_food">Add food</string>
-    <string name="add_food_to_list">Add food to list</string>
     <string name="add">Add</string>
-    <string name="delete_eating">Delete eating</string>
-    <string name="delete_day">Delete day</string>
     <string name="delete_food">Delete food</string>
-    <string name="new_eating">New eating</string>
+    <string name="new_eating">New meal</string>
     <string name="save">Save</string>
     <string name="food_list">Food list</string>
     <string name="food_name">Food name</string>
@@ -36,21 +32,15 @@
         <item>Snacks</item>
     </string-array>
 
-    <string name="pfc_ratio">"PFC Ratio: "</string>
-    <string name="language">Language</string>
+    <string name="pfc_ratio_colon">"PFC Ratio: "</string>
 
-    <string-array name="languages">
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
     <string-array name="init_food">
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Rice, white, long-grain', 7.13, 0.66, 80, 365, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Chicken breast', 23.6, 1.9, 0.4, 165, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Bread, white', 7.6, 3.3, 50.6, 165, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Bananas', 1.5, 0, 22.4, 91, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Cucumber, fresh', 0.8, 0, 3, 15, 'grams')"</item>
-        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Tomatos, fresh', 0.8, 0, 3, 15, 'grams')"</item>
+        <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Tomatoes, fresh', 0.8, 0, 3, 15, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name, unit) VALUES ('Eggs, big', 8.16, 6.97, 0.54, 105.4, 'pcs', 1)"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Cereal (oatmeal)', 13.1, 6.2, 65.7, 355, 'grams')"</item>
         <item>"INSERT INTO food (food_name, protein, fat, carbs, kcal, unit_name) VALUES ('Milk 3%', 3.29, 3.34, 4.66, 61.44, 'grams')"</item>
@@ -66,12 +56,29 @@
     <string name="total_ratio">PFC RATIO</string>
     <string name="per_day_statistics">AVG PER DAY</string>
     <string name="export_to_csv">Export to CSV</string>
+    <string name="import_from_csv">Import from CSV</string>
     <string name="exporting">Exporting…</string>
+    <string name="importing">Importing…</string>
 
-    <string name="dialog_action_open">Open</string>
     <string name="dialog_message_export_success">You can find report in</string>
     <string name="dialog_message_export_failure">Failed to export:</string>
     <string name="dialog_message_no_storage">There is no available public storage</string>
     <string name="dialog_message_error_creating_directory">Directory not created</string>
 
+    <string name="dialog_message_import_success">Import completed</string>
+    <string name="dialog_message_import_failure">Failed to import. Use exported file as example.</string>
+
+    <!-- Carbculator 2 -->
+    <string name="calendar">Calendar</string>
+
+    <string name="kcal">"Kcal: %.1f"</string>
+    <string name="pfc_ratio">"PFC Ratio: %s"</string>
+    <string name="carbs">"Carbs: %.1f"</string>
+    <string name="protein">"Protein: %.1f"</string>
+    <string name="fat">"Fat: %.1f"</string>
+    <string name="delete_meal">Delete meal</string>
+    <string name="permission_button_accept">Allow</string>
+    <string name="permission_button_deny">Deny</string>
+    <string name="write_external_storage_request_title">Write files</string>
+    <string name="write_external_storage_request_rationale">We need your permission to write files to your device.</string>
 </resources>

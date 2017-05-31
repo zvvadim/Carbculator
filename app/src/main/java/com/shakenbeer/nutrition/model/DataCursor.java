@@ -10,7 +10,7 @@ import android.database.CursorWrapper;
  */
 public class DataCursor<D> extends CursorWrapper {
     
-    private DataGetter<D> dataGetter;
+    private final DataGetter<D> dataGetter;
 
     public DataCursor(Cursor cursor, DataGetter<D> dataGetter) {
         super(cursor);

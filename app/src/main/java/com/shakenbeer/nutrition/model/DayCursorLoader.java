@@ -7,6 +7,7 @@ import android.database.Cursor;
  * @author Sviatoslav Melnychenko
  *
  */
+@SuppressWarnings("unused")
 public class DayCursorLoader extends SimpleCursorLoader {
 
     public DayCursorLoader(Context context) {

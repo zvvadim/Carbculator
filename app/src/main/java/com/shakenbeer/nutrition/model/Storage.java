@@ -1,6 +1,7 @@
 package com.shakenbeer.nutrition.model;
 
 import java.util.Date;
+
 import android.database.Cursor;
 
 /**
@@ -18,8 +19,10 @@ public interface Storage {
     Cursor queryFoods();
 
     Cursor queryFoods(String startWith);
+
+    Cursor queryFood(long foodId);
     
-    Cursor queryComponents(Eating eating);
+    Cursor queryComponents(Meal meal);
 
     long insertFood(Food food);
 
@@ -29,9 +32,9 @@ public interface Storage {
 
     void updateMarkDeleted(Food food);
     
-    long insertEating(Eating eating);
+    long insertEating(Meal meal);
 
-    void updateEating(Eating eating);
+    void updateEating(Meal meal);
 
     long insertComponent(Component component, long eatingId);  
 
@@ -39,9 +42,13 @@ public interface Storage {
 
     void deleteComponent(Component component);
 
-    void deleteComponents(Eating eating);
+    void deleteComponents(Meal meal);
 
-    void deleteEating(Eating eating);
+    void deleteEating(Meal meal);
 
-    
+    Cursor queryDays(int page, int offset);
+
+    Cursor queryFoods(int page, int offset);
+
+    Cursor queryMeal(long id);
 }
