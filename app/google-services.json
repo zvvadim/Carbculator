@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "67756943123",
+    "firebase_url": "https://carbculator-3059d.firebaseio.com",
+    "project_id": "carbculator-3059d",
+    "storage_bucket": "carbculator-3059d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67756943123:android:1a8919857be848af",
+        "android_client_info": {
+          "package_name": "com.shakenbeer.nutrition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67756943123-ut554adkq889ijvae5uu9t2bq0sc0fvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shakenbeer.nutrition",
+            "certificate_hash": "27b7f358e24d6f136436540cefd84d7d8d05d936"
+          }
+        },
+        {
+          "client_id": "67756943123-vd87e2d2l6kpl2to9bt43kummjm53cad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLygvmNfREgDjfgrzm4BwmWOWjkTC5I3c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67756943123-vd87e2d2l6kpl2to9bt43kummjm53cad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
